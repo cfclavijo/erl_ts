@@ -1,0 +1,49 @@
+* erl_ts
+
+Erlang Tree-Sitter integration. An OTP library that implements NIFs calls to tree-sitter.
+
+Many tree-sitter APIs were implemented, and other functions were added to ease its consumption. This is in early stage, but most important functions were added.
+
+For now it only supports Erlang/OTP grammar but is possible to extend it.
+
+** WHY?
+
+I'm not proficient with C and found this project interesting; helps me to learn C, interoperability between Erlang and C libraries using its built-in NIF framework, and practice elisp.
+Where is the elisp part? well, I wrote a code generator in less than 1 hour to produce the transformations between Erlang terms arguments and C types.
+
+** Build
+
+Ensure ~libtree-sitter~ and ~libtree-sitter-erlang.so~ are part of ~LDLIBS~
+
+~$ rebar3 compile~
+
+** Test
+
+call ~erl_ts:init()~ only once per execution as it will load ~erl_ts.so~ and reloading these libraries are not supported by Erlang/OTP.
+
+~$ rebar3 shell~
+
+#+begin_example erlang
+Erlang/OTP 26 [erts-14.2.5.4] [source] [64-bit] [smp:4:4] [ds:4:4:10] [async-threads:1] [jit:ns]
+
+Eshell V14.2.5.4 (press Ctrl+G to abort, type help(). for help)
+1> erl_ts:init(),
+   {ok, Parser} = erl_ts:ts_parser_new(),
+   {ok, Lang} = erl_ts:tree_sitter_erlang(),
+   true = erl_ts:ts_parser_set_language(Parser, Lang),
+   SC = "a_qt_function({A, B}) -> {A+A, B*B}.\nb_qt_function(A, B) -> #{a => A, b => B}.",
+   Tree = erl_ts:ts_parser_parse_string(Parser, undefined, SC),
+   RootNode = erl_ts:ts_tree_root_node(Tree),
+   RootNodeStr = erl_ts:ts_node_string(RootNode).
+<<"(source_file forms_only: (fun_decl clause: (function_clause name: (atom) args: (expr_args args: (tuple expr: (var) e"...>>
+2> rp(RootNodeStr).
+<<"(source_file forms_only: (fun_decl clause: (function_clause name: (atom) args: (expr_args args: (tuple expr: (var) expr: (var))) body: (clause_body exprs: (tuple expr: (binary_op_expr lhs: (var) rhs: (var)) expr: (binary_op_expr lhs: (var) rhs: (var)))))) forms_only: (fun_decl clause: (function_clause name: (atom) args: (expr_args args: (var) args: (var)) body: (clause_body exprs: (map_expr fields: (map_field key: (atom) value: (var)) fields: (map_field key: (atom) value: (var)))))))">>
+ok
+3> {Query, _, _} = erl_ts:ts_query_new(Lang, "(function_clause name: (atom) @fun_name)").
+{#Ref<0.3646334886.4285399041.132320>,3418416122,error_none}
+4> Captures = erl_ts:ts_query_capture(RootNode, Query).
+[{"fun_name",#Ref<0.733339053.444203009.70844>},
+ {"fun_name",#Ref<0.733339053.444203009.70843>}]
+5> [{C, erl_ts:ts_node_text(N, SC)} || {C, N} <- Captures].
+[{"fun_name","b_qt_function"},{"fun_name","a_qt_function"}]
+#+end_example

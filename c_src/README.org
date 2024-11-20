@@ -1,0 +1,31 @@
+** Handling resources. enif_alloc_resource and enif_release_resource 
+
+*** *Reference Counting*
+- When `enif_alloc_resource` is called, the resource's reference count is initialized to 1.
+- When `enif_make_resource` is called, the reference count is incremented to 2.
+- When `enif_release_resource` is called, the reference count is decremented back to 1.
+- The resource is now managed by the Erlang VM. When the Erlang term that holds the resource is garbage collected, the reference count will be decremented to 0, and the `free_my_resource` function will be called to clean up the resource.
+
+*** *Resource Cleanup*  
+- The `free_my_resource` function is registered as the destructor for the resource type when you call `enif_open_resource_type`.
+- This destructor function is called automatically by the Erlang VM when the reference count of the resource drops to zero, meaning there are no more references to the resource from either Erlang terms or NIF code.
+
+** TSNode * pointer
+
+Initially, the resource that stored the TSNode stored the pointer, but since the tree-sitter functions that return a TSNode do so by returning the value, this code bellow is no longer required; I'm leaving it here just for reference on how to allocate memory they pointer points to (if that sentence made any sense...).
+
+#+begin_example c
+  TSNode node = ts_tree_root_node(tree);
+  struct_TSNode *res_node =
+    enif_alloc_resource(res_TSNode, sizeof(struct_TSNode));
+  /* Allocate memory for the TSNode value */
+  res_node->val = enif_alloc(sizeof(TSNode));
+  if (res_node->val == NULL) {
+    enif_release_resource(res_node);
+    return enif_make_badarg(env);
+  }
+  /* Copies the value of `node` into the allocated memory. */
+  *res_node->val = node;
+  ERL_NIF_TERM term_node = enif_make_resource(env, res_node);
+  enif_release_resource(res_node);
+#+end_example
