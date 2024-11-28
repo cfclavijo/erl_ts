@@ -28,22 +28,22 @@ Erlang/OTP 26 [erts-14.2.5.4] [source] [64-bit] [smp:4:4] [ds:4:4:10] [async-thr
 
 Eshell V14.2.5.4 (press Ctrl+G to abort, type help(). for help)
 1> erl_ts:init(),
-   {ok, Parser} = erl_ts:ts_parser_new(),
+   {ok, Parser} = erl_ts:parser_new(),
    {ok, Lang} = erl_ts:tree_sitter_erlang(),
-   true = erl_ts:ts_parser_set_language(Parser, Lang),
+   true = erl_ts:parser_set_language(Parser, Lang),
    SC = "a_qt_function({A, B}) -> {A+A, B*B}.\nb_qt_function(A, B) -> #{a => A, b => B}.",
-   Tree = erl_ts:ts_parser_parse_string(Parser, undefined, SC),
-   RootNode = erl_ts:ts_tree_root_node(Tree),
-   RootNodeStr = erl_ts:ts_node_string(RootNode).
+   Tree = erl_ts:parser_parse_string(Parser, undefined, SC),
+   RootNode = erl_ts:tree_root_node(Tree),
+   RootNodeStr = erl_ts:node_string(RootNode).
 <<"(source_file forms_only: (fun_decl clause: (function_clause name: (atom) args: (expr_args args: (tuple expr: (var) e"...>>
 2> rp(RootNodeStr).
 <<"(source_file forms_only: (fun_decl clause: (function_clause name: (atom) args: (expr_args args: (tuple expr: (var) expr: (var))) body: (clause_body exprs: (tuple expr: (binary_op_expr lhs: (var) rhs: (var)) expr: (binary_op_expr lhs: (var) rhs: (var)))))) forms_only: (fun_decl clause: (function_clause name: (atom) args: (expr_args args: (var) args: (var)) body: (clause_body exprs: (map_expr fields: (map_field key: (atom) value: (var)) fields: (map_field key: (atom) value: (var)))))))">>
 ok
-3> {Query, _, _} = erl_ts:ts_query_new(Lang, "(function_clause name: (atom) @fun_name)").
+3> {Query, _, _} = erl_ts:query_new(Lang, "(function_clause name: (atom) @fun_name)").
 {#Ref<0.3646334886.4285399041.132320>,3418416122,error_none}
-4> Captures = erl_ts:ts_query_capture(RootNode, Query).
+4> Captures = erl_ts:query_capture(RootNode, Query).
 [{"fun_name",#Ref<0.733339053.444203009.70844>},
  {"fun_name",#Ref<0.733339053.444203009.70843>}]
-5> [{C, erl_ts:ts_node_text(N, SC)} || {C, N} <- Captures].
+5> [{C, erl_ts:node_text(N, SC)} || {C, N} <- Captures].
 [{"fun_name","b_qt_function"},{"fun_name","a_qt_function"}]
 #+end_example

@@ -285,147 +285,147 @@ int atom_to_tsquery_error(ERL_NIF_TERM atom, TSQueryError *error) {
 /********************************************************************/
 /* Functions declaration */
 /********************************************************************/
-ERL_TS_FUNCTION_DECL(ts_parser_new_nif)
-ERL_TS_FUNCTION_DECL(ts_parser_delete_nif)
-ERL_TS_FUNCTION_DECL(ts_parser_language_nif)
-ERL_TS_FUNCTION_DECL(ts_parser_set_language_nif)
-ERL_TS_FUNCTION_DECL(ts_parser_set_included_ranges_nif)
-ERL_TS_FUNCTION_DECL(ts_parser_included_ranges_nif)
-ERL_TS_FUNCTION_DECL(ts_parser_parse_nif)
-ERL_TS_FUNCTION_DECL(ts_parser_parse_with_options_nif)
-ERL_TS_FUNCTION_DECL(ts_parser_parse_string_nif)
-ERL_TS_FUNCTION_DECL(ts_parser_parse_string_encoding_nif)
-ERL_TS_FUNCTION_DECL(ts_parser_reset_nif)
-ERL_TS_FUNCTION_DECL(ts_parser_set_timeout_micros_nif)
-ERL_TS_FUNCTION_DECL(ts_parser_timeout_micros_nif)
-ERL_TS_FUNCTION_DECL(ts_parser_set_cancellation_flag_nif)
-ERL_TS_FUNCTION_DECL(ts_parser_cancellation_flag_nif)
-ERL_TS_FUNCTION_DECL(ts_parser_set_logger_nif)
-ERL_TS_FUNCTION_DECL(ts_parser_logger_nif)
-ERL_TS_FUNCTION_DECL(ts_parser_print_dot_graphs_nif)
-ERL_TS_FUNCTION_DECL(ts_tree_copy_nif)
-ERL_TS_FUNCTION_DECL(ts_tree_delete_nif)
-ERL_TS_FUNCTION_DECL(ts_tree_root_node_nif)
-ERL_TS_FUNCTION_DECL(ts_tree_root_node_with_offset_nif)
-ERL_TS_FUNCTION_DECL(ts_tree_language_nif)
-ERL_TS_FUNCTION_DECL(ts_tree_included_ranges_nif)
-ERL_TS_FUNCTION_DECL(ts_tree_edit_nif)
-ERL_TS_FUNCTION_DECL(ts_tree_get_changed_ranges_nif)
-ERL_TS_FUNCTION_DECL(ts_tree_print_dot_graph_nif)
-ERL_TS_FUNCTION_DECL(ts_node_type_nif)
-ERL_TS_FUNCTION_DECL(ts_node_symbol_nif)
-ERL_TS_FUNCTION_DECL(ts_node_language_nif)
-ERL_TS_FUNCTION_DECL(ts_node_grammar_type_nif)
-ERL_TS_FUNCTION_DECL(ts_node_grammar_symbol_nif)
-ERL_TS_FUNCTION_DECL(ts_node_start_byte_nif)
-ERL_TS_FUNCTION_DECL(ts_node_start_point_nif)
-ERL_TS_FUNCTION_DECL(ts_node_end_byte_nif)
-ERL_TS_FUNCTION_DECL(ts_node_end_point_nif)
-ERL_TS_FUNCTION_DECL(ts_node_string_nif)
-ERL_TS_FUNCTION_DECL(ts_node_is_null_nif)
-ERL_TS_FUNCTION_DECL(ts_node_is_named_nif)
-ERL_TS_FUNCTION_DECL(ts_node_is_missing_nif)
-ERL_TS_FUNCTION_DECL(ts_node_is_extra_nif)
-ERL_TS_FUNCTION_DECL(ts_node_has_changes_nif)
-ERL_TS_FUNCTION_DECL(ts_node_has_error_nif)
-ERL_TS_FUNCTION_DECL(ts_node_is_error_nif)
-ERL_TS_FUNCTION_DECL(ts_node_parse_state_nif)
-ERL_TS_FUNCTION_DECL(ts_node_next_parse_state_nif)
-ERL_TS_FUNCTION_DECL(ts_node_parent_nif)
-ERL_TS_FUNCTION_DECL(ts_node_child_containing_descendant_nif)
-ERL_TS_FUNCTION_DECL(ts_node_child_with_descendant_nif)
-ERL_TS_FUNCTION_DECL(ts_node_child_nif)
-ERL_TS_FUNCTION_DECL(ts_node_field_name_for_child_nif)
-ERL_TS_FUNCTION_DECL(ts_node_field_name_for_named_child_nif)
-ERL_TS_FUNCTION_DECL(ts_node_child_count_nif)
-ERL_TS_FUNCTION_DECL(ts_node_named_child_nif)
-ERL_TS_FUNCTION_DECL(ts_node_named_child_count_nif)
-ERL_TS_FUNCTION_DECL(ts_node_child_by_field_name_nif)
-ERL_TS_FUNCTION_DECL(ts_node_child_by_field_id_nif)
-ERL_TS_FUNCTION_DECL(ts_node_next_sibling_nif)
-ERL_TS_FUNCTION_DECL(ts_node_prev_sibling_nif)
-ERL_TS_FUNCTION_DECL(ts_node_next_named_sibling_nif)
-ERL_TS_FUNCTION_DECL(ts_node_prev_named_sibling_nif)
-ERL_TS_FUNCTION_DECL(ts_node_first_child_for_byte_nif)
-ERL_TS_FUNCTION_DECL(ts_node_first_named_child_for_byte_nif)
-ERL_TS_FUNCTION_DECL(ts_node_descendant_count_nif)
-ERL_TS_FUNCTION_DECL(ts_node_descendant_for_byte_range_nif)
-ERL_TS_FUNCTION_DECL(ts_node_descendant_for_point_range_nif)
-ERL_TS_FUNCTION_DECL(ts_node_named_descendant_for_byte_range_nif)
-ERL_TS_FUNCTION_DECL(ts_node_named_descendant_for_point_range_nif)
-ERL_TS_FUNCTION_DECL(ts_node_edit_nif)
-ERL_TS_FUNCTION_DECL(ts_node_eq_nif)
-ERL_TS_FUNCTION_DECL(ts_tree_cursor_new_nif)
-ERL_TS_FUNCTION_DECL(ts_tree_cursor_delete_nif)
-ERL_TS_FUNCTION_DECL(ts_tree_cursor_reset_nif)
-ERL_TS_FUNCTION_DECL(ts_tree_cursor_reset_to_nif)
-ERL_TS_FUNCTION_DECL(ts_tree_cursor_current_node_nif)
-ERL_TS_FUNCTION_DECL(ts_tree_cursor_current_field_name_nif)
-ERL_TS_FUNCTION_DECL(ts_tree_cursor_current_field_id_nif)
-ERL_TS_FUNCTION_DECL(ts_tree_cursor_goto_parent_nif)
-ERL_TS_FUNCTION_DECL(ts_tree_cursor_goto_next_sibling_nif)
-ERL_TS_FUNCTION_DECL(ts_tree_cursor_goto_previous_sibling_nif)
-ERL_TS_FUNCTION_DECL(ts_tree_cursor_goto_first_child_nif)
-ERL_TS_FUNCTION_DECL(ts_tree_cursor_goto_last_child_nif)
-ERL_TS_FUNCTION_DECL(ts_tree_cursor_goto_descendant_nif)
-ERL_TS_FUNCTION_DECL(ts_tree_cursor_current_descendant_index_nif)
-ERL_TS_FUNCTION_DECL(ts_tree_cursor_current_depth_nif)
-ERL_TS_FUNCTION_DECL(ts_tree_cursor_goto_first_child_for_byte_nif)
-ERL_TS_FUNCTION_DECL(ts_tree_cursor_goto_first_child_for_point_nif)
-ERL_TS_FUNCTION_DECL(ts_tree_cursor_copy_nif)
-ERL_TS_FUNCTION_DECL(ts_query_new_nif)
-ERL_TS_FUNCTION_DECL(ts_query_delete_nif)
-ERL_TS_FUNCTION_DECL(ts_query_pattern_count_nif)
-ERL_TS_FUNCTION_DECL(ts_query_capture_count_nif)
-ERL_TS_FUNCTION_DECL(ts_query_string_count_nif)
-ERL_TS_FUNCTION_DECL(ts_query_start_byte_for_pattern_nif)
-ERL_TS_FUNCTION_DECL(ts_query_end_byte_for_pattern_nif)
-ERL_TS_FUNCTION_DECL(ts_query_predicates_for_pattern_nif)
-ERL_TS_FUNCTION_DECL(ts_query_is_pattern_rooted_nif)
-ERL_TS_FUNCTION_DECL(ts_query_is_pattern_non_local_nif)
-ERL_TS_FUNCTION_DECL(ts_query_is_pattern_guaranteed_at_step_nif)
-ERL_TS_FUNCTION_DECL(ts_query_capture_name_for_id_nif)
-ERL_TS_FUNCTION_DECL(ts_query_capture_quantifier_for_id_nif)
-ERL_TS_FUNCTION_DECL(ts_query_string_value_for_id_nif)
-ERL_TS_FUNCTION_DECL(ts_query_disable_capture_nif)
-ERL_TS_FUNCTION_DECL(ts_query_disable_pattern_nif)
-ERL_TS_FUNCTION_DECL(ts_query_capture_nif)
-ERL_TS_FUNCTION_DECL(ts_query_cursor_new_nif)
-ERL_TS_FUNCTION_DECL(ts_query_cursor_delete_nif)
-ERL_TS_FUNCTION_DECL(ts_query_cursor_exec_nif)
-ERL_TS_FUNCTION_DECL(ts_query_cursor_exec_with_options_nif)
-ERL_TS_FUNCTION_DECL(ts_query_cursor_did_exceed_match_limit_nif)
-ERL_TS_FUNCTION_DECL(ts_query_cursor_match_limit_nif)
-ERL_TS_FUNCTION_DECL(ts_query_cursor_set_match_limit_nif)
-ERL_TS_FUNCTION_DECL(ts_query_cursor_set_timeout_micros_nif)
-ERL_TS_FUNCTION_DECL(ts_query_cursor_timeout_micros_nif)
-ERL_TS_FUNCTION_DECL(ts_query_cursor_set_byte_range_nif)
-ERL_TS_FUNCTION_DECL(ts_query_cursor_set_point_range_nif)
-ERL_TS_FUNCTION_DECL(ts_query_cursor_next_match_nif)
-ERL_TS_FUNCTION_DECL(ts_query_cursor_remove_match_nif)
-ERL_TS_FUNCTION_DECL(ts_query_cursor_next_capture_nif)
-ERL_TS_FUNCTION_DECL(ts_query_cursor_set_max_start_depth_nif)
-ERL_TS_FUNCTION_DECL(ts_language_copy_nif)
-ERL_TS_FUNCTION_DECL(ts_language_delete_nif)
-ERL_TS_FUNCTION_DECL(ts_language_symbol_count_nif)
-ERL_TS_FUNCTION_DECL(ts_language_state_count_nif)
-ERL_TS_FUNCTION_DECL(ts_language_symbol_name_nif)
-ERL_TS_FUNCTION_DECL(ts_language_symbol_for_name_nif)
-ERL_TS_FUNCTION_DECL(ts_language_field_count_nif)
-ERL_TS_FUNCTION_DECL(ts_language_field_name_for_id_nif)
-ERL_TS_FUNCTION_DECL(ts_language_field_id_for_name_nif)
-ERL_TS_FUNCTION_DECL(ts_language_symbol_type_nif)
-ERL_TS_FUNCTION_DECL(ts_language_version_nif)
-ERL_TS_FUNCTION_DECL(ts_language_next_state_nif)
-ERL_TS_FUNCTION_DECL(ts_language_name_nif)
-ERL_TS_FUNCTION_DECL(ts_lookahead_iterator_new_nif)
-ERL_TS_FUNCTION_DECL(ts_lookahead_iterator_delete_nif)
-ERL_TS_FUNCTION_DECL(ts_lookahead_iterator_reset_state_nif)
-ERL_TS_FUNCTION_DECL(ts_lookahead_iterator_reset_nif)
-ERL_TS_FUNCTION_DECL(ts_lookahead_iterator_language_nif)
-ERL_TS_FUNCTION_DECL(ts_lookahead_iterator_next_nif)
-ERL_TS_FUNCTION_DECL(ts_lookahead_iterator_current_symbol_nif)
-ERL_TS_FUNCTION_DECL(ts_lookahead_iterator_current_symbol_name_nif)
+ERL_TS_FUNCTION_DECL(parser_new_nif)
+ERL_TS_FUNCTION_DECL(parser_delete_nif)
+ERL_TS_FUNCTION_DECL(parser_language_nif)
+ERL_TS_FUNCTION_DECL(parser_set_language_nif)
+ERL_TS_FUNCTION_DECL(parser_set_included_ranges_nif)
+ERL_TS_FUNCTION_DECL(parser_included_ranges_nif)
+ERL_TS_FUNCTION_DECL(parser_parse_nif)
+ERL_TS_FUNCTION_DECL(parser_parse_with_options_nif)
+ERL_TS_FUNCTION_DECL(parser_parse_string_nif)
+ERL_TS_FUNCTION_DECL(parser_parse_string_encoding_nif)
+ERL_TS_FUNCTION_DECL(parser_reset_nif)
+ERL_TS_FUNCTION_DECL(parser_set_timeout_micros_nif)
+ERL_TS_FUNCTION_DECL(parser_timeout_micros_nif)
+ERL_TS_FUNCTION_DECL(parser_set_cancellation_flag_nif)
+ERL_TS_FUNCTION_DECL(parser_cancellation_flag_nif)
+ERL_TS_FUNCTION_DECL(parser_set_logger_nif)
+ERL_TS_FUNCTION_DECL(parser_logger_nif)
+ERL_TS_FUNCTION_DECL(parser_print_dot_graphs_nif)
+ERL_TS_FUNCTION_DECL(tree_copy_nif)
+ERL_TS_FUNCTION_DECL(tree_delete_nif)
+ERL_TS_FUNCTION_DECL(tree_root_node_nif)
+ERL_TS_FUNCTION_DECL(tree_root_node_with_offset_nif)
+ERL_TS_FUNCTION_DECL(tree_language_nif)
+ERL_TS_FUNCTION_DECL(tree_included_ranges_nif)
+ERL_TS_FUNCTION_DECL(tree_edit_nif)
+ERL_TS_FUNCTION_DECL(tree_get_changed_ranges_nif)
+ERL_TS_FUNCTION_DECL(tree_print_dot_graph_nif)
+ERL_TS_FUNCTION_DECL(node_type_nif)
+ERL_TS_FUNCTION_DECL(node_symbol_nif)
+ERL_TS_FUNCTION_DECL(node_language_nif)
+ERL_TS_FUNCTION_DECL(node_grammar_type_nif)
+ERL_TS_FUNCTION_DECL(node_grammar_symbol_nif)
+ERL_TS_FUNCTION_DECL(node_start_byte_nif)
+ERL_TS_FUNCTION_DECL(node_start_point_nif)
+ERL_TS_FUNCTION_DECL(node_end_byte_nif)
+ERL_TS_FUNCTION_DECL(node_end_point_nif)
+ERL_TS_FUNCTION_DECL(node_string_nif)
+ERL_TS_FUNCTION_DECL(node_is_null_nif)
+ERL_TS_FUNCTION_DECL(node_is_named_nif)
+ERL_TS_FUNCTION_DECL(node_is_missing_nif)
+ERL_TS_FUNCTION_DECL(node_is_extra_nif)
+ERL_TS_FUNCTION_DECL(node_has_changes_nif)
+ERL_TS_FUNCTION_DECL(node_has_error_nif)
+ERL_TS_FUNCTION_DECL(node_is_error_nif)
+ERL_TS_FUNCTION_DECL(node_parse_state_nif)
+ERL_TS_FUNCTION_DECL(node_next_parse_state_nif)
+ERL_TS_FUNCTION_DECL(node_parent_nif)
+ERL_TS_FUNCTION_DECL(node_child_containing_descendant_nif)
+ERL_TS_FUNCTION_DECL(node_child_with_descendant_nif)
+ERL_TS_FUNCTION_DECL(node_child_nif)
+ERL_TS_FUNCTION_DECL(node_field_name_for_child_nif)
+ERL_TS_FUNCTION_DECL(node_field_name_for_named_child_nif)
+ERL_TS_FUNCTION_DECL(node_child_count_nif)
+ERL_TS_FUNCTION_DECL(node_named_child_nif)
+ERL_TS_FUNCTION_DECL(node_named_child_count_nif)
+ERL_TS_FUNCTION_DECL(node_child_by_field_name_nif)
+ERL_TS_FUNCTION_DECL(node_child_by_field_id_nif)
+ERL_TS_FUNCTION_DECL(node_next_sibling_nif)
+ERL_TS_FUNCTION_DECL(node_prev_sibling_nif)
+ERL_TS_FUNCTION_DECL(node_next_named_sibling_nif)
+ERL_TS_FUNCTION_DECL(node_prev_named_sibling_nif)
+ERL_TS_FUNCTION_DECL(node_first_child_for_byte_nif)
+ERL_TS_FUNCTION_DECL(node_first_named_child_for_byte_nif)
+ERL_TS_FUNCTION_DECL(node_descendant_count_nif)
+ERL_TS_FUNCTION_DECL(node_descendant_for_byte_range_nif)
+ERL_TS_FUNCTION_DECL(node_descendant_for_point_range_nif)
+ERL_TS_FUNCTION_DECL(node_named_descendant_for_byte_range_nif)
+ERL_TS_FUNCTION_DECL(node_named_descendant_for_point_range_nif)
+ERL_TS_FUNCTION_DECL(node_edit_nif)
+ERL_TS_FUNCTION_DECL(node_eq_nif)
+ERL_TS_FUNCTION_DECL(tree_cursor_new_nif)
+ERL_TS_FUNCTION_DECL(tree_cursor_delete_nif)
+ERL_TS_FUNCTION_DECL(tree_cursor_reset_nif)
+ERL_TS_FUNCTION_DECL(tree_cursor_reset_to_nif)
+ERL_TS_FUNCTION_DECL(tree_cursor_current_node_nif)
+ERL_TS_FUNCTION_DECL(tree_cursor_current_field_name_nif)
+ERL_TS_FUNCTION_DECL(tree_cursor_current_field_id_nif)
+ERL_TS_FUNCTION_DECL(tree_cursor_goto_parent_nif)
+ERL_TS_FUNCTION_DECL(tree_cursor_goto_next_sibling_nif)
+ERL_TS_FUNCTION_DECL(tree_cursor_goto_previous_sibling_nif)
+ERL_TS_FUNCTION_DECL(tree_cursor_goto_first_child_nif)
+ERL_TS_FUNCTION_DECL(tree_cursor_goto_last_child_nif)
+ERL_TS_FUNCTION_DECL(tree_cursor_goto_descendant_nif)
+ERL_TS_FUNCTION_DECL(tree_cursor_current_descendant_index_nif)
+ERL_TS_FUNCTION_DECL(tree_cursor_current_depth_nif)
+ERL_TS_FUNCTION_DECL(tree_cursor_goto_first_child_for_byte_nif)
+ERL_TS_FUNCTION_DECL(tree_cursor_goto_first_child_for_point_nif)
+ERL_TS_FUNCTION_DECL(tree_cursor_copy_nif)
+ERL_TS_FUNCTION_DECL(query_new_nif)
+ERL_TS_FUNCTION_DECL(query_delete_nif)
+ERL_TS_FUNCTION_DECL(query_pattern_count_nif)
+ERL_TS_FUNCTION_DECL(query_capture_count_nif)
+ERL_TS_FUNCTION_DECL(query_string_count_nif)
+ERL_TS_FUNCTION_DECL(query_start_byte_for_pattern_nif)
+ERL_TS_FUNCTION_DECL(query_end_byte_for_pattern_nif)
+ERL_TS_FUNCTION_DECL(query_predicates_for_pattern_nif)
+ERL_TS_FUNCTION_DECL(query_is_pattern_rooted_nif)
+ERL_TS_FUNCTION_DECL(query_is_pattern_non_local_nif)
+ERL_TS_FUNCTION_DECL(query_is_pattern_guaranteed_at_step_nif)
+ERL_TS_FUNCTION_DECL(query_capture_name_for_id_nif)
+ERL_TS_FUNCTION_DECL(query_capture_quantifier_for_id_nif)
+ERL_TS_FUNCTION_DECL(query_string_value_for_id_nif)
+ERL_TS_FUNCTION_DECL(query_disable_capture_nif)
+ERL_TS_FUNCTION_DECL(query_disable_pattern_nif)
+ERL_TS_FUNCTION_DECL(query_capture_nif)
+ERL_TS_FUNCTION_DECL(query_cursor_new_nif)
+ERL_TS_FUNCTION_DECL(query_cursor_delete_nif)
+ERL_TS_FUNCTION_DECL(query_cursor_exec_nif)
+ERL_TS_FUNCTION_DECL(query_cursor_exec_with_options_nif)
+ERL_TS_FUNCTION_DECL(query_cursor_did_exceed_match_limit_nif)
+ERL_TS_FUNCTION_DECL(query_cursor_match_limit_nif)
+ERL_TS_FUNCTION_DECL(query_cursor_set_match_limit_nif)
+ERL_TS_FUNCTION_DECL(query_cursor_set_timeout_micros_nif)
+ERL_TS_FUNCTION_DECL(query_cursor_timeout_micros_nif)
+ERL_TS_FUNCTION_DECL(query_cursor_set_byte_range_nif)
+ERL_TS_FUNCTION_DECL(query_cursor_set_point_range_nif)
+ERL_TS_FUNCTION_DECL(query_cursor_next_match_nif)
+ERL_TS_FUNCTION_DECL(query_cursor_remove_match_nif)
+ERL_TS_FUNCTION_DECL(query_cursor_next_capture_nif)
+ERL_TS_FUNCTION_DECL(query_cursor_set_max_start_depth_nif)
+ERL_TS_FUNCTION_DECL(language_copy_nif)
+ERL_TS_FUNCTION_DECL(language_delete_nif)
+ERL_TS_FUNCTION_DECL(language_symbol_count_nif)
+ERL_TS_FUNCTION_DECL(language_state_count_nif)
+ERL_TS_FUNCTION_DECL(language_symbol_name_nif)
+ERL_TS_FUNCTION_DECL(language_symbol_for_name_nif)
+ERL_TS_FUNCTION_DECL(language_field_count_nif)
+ERL_TS_FUNCTION_DECL(language_field_name_for_id_nif)
+ERL_TS_FUNCTION_DECL(language_field_id_for_name_nif)
+ERL_TS_FUNCTION_DECL(language_symbol_type_nif)
+ERL_TS_FUNCTION_DECL(language_version_nif)
+ERL_TS_FUNCTION_DECL(language_next_state_nif)
+ERL_TS_FUNCTION_DECL(language_name_nif)
+ERL_TS_FUNCTION_DECL(lookahead_iterator_new_nif)
+ERL_TS_FUNCTION_DECL(lookahead_iterator_delete_nif)
+ERL_TS_FUNCTION_DECL(lookahead_iterator_reset_state_nif)
+ERL_TS_FUNCTION_DECL(lookahead_iterator_reset_nif)
+ERL_TS_FUNCTION_DECL(lookahead_iterator_language_nif)
+ERL_TS_FUNCTION_DECL(lookahead_iterator_next_nif)
+ERL_TS_FUNCTION_DECL(lookahead_iterator_current_symbol_nif)
+ERL_TS_FUNCTION_DECL(lookahead_iterator_current_symbol_name_nif)
 
 ERL_TS_FUNCTION_DECL(tree_sitter_erlang_nif)
 
@@ -439,7 +439,7 @@ ERL_TS_FUNCTION_DECL(tree_sitter_erlang_nif)
 /* Section - Parser */
 /********************/
 
-ERL_TS_FUNCTION(ts_parser_new_nif) {
+ERL_TS_FUNCTION(parser_new_nif) {
   TSParser* parser = ts_parser_new();
   if (!parser) return mk_error(env, "unable_to_create_new_parser");
 
@@ -451,13 +451,13 @@ ERL_TS_FUNCTION(ts_parser_new_nif) {
   return enif_make_tuple2(env, atom_ok, term_parser);
 }
 
-ERL_TS_FUNCTION(ts_parser_delete_nif) {
+ERL_TS_FUNCTION(parser_delete_nif) {
   /* TODO: */
   /* void ts_parser_delete_nif(TSParser *self) */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_parser_language_nif) {
+ERL_TS_FUNCTION(parser_language_nif) {
   void* res_parser;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSParser, &res_parser));
   TSParser* parser = ((struct_TSParser*)res_parser)->val;
@@ -472,7 +472,7 @@ ERL_TS_FUNCTION(ts_parser_language_nif) {
   return enif_make_tuple2(env, atom_ok, term_language);
 }
 
-ERL_TS_FUNCTION(ts_parser_set_language_nif) {
+ERL_TS_FUNCTION(parser_set_language_nif) {
   void *res_parser;
   void *res_language;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSParser, &res_parser));
@@ -485,7 +485,7 @@ ERL_TS_FUNCTION(ts_parser_set_language_nif) {
   return result ? atom_true : atom_false;
 }
 
-ERL_TS_FUNCTION(ts_parser_set_included_ranges_nif) {
+ERL_TS_FUNCTION(parser_set_included_ranges_nif) {
   /* TODO: */
   /* bool ts_parser_set_included_ranges( */
   /* TSParser *self, */
@@ -494,7 +494,7 @@ ERL_TS_FUNCTION(ts_parser_set_included_ranges_nif) {
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_parser_included_ranges_nif) {
+ERL_TS_FUNCTION(parser_included_ranges_nif) {
   /* const TSRange *ts_parser_included_ranges( */
   /*   const TSParser *self, */
   /*   uint32_t *count */
@@ -518,7 +518,7 @@ ERL_TS_FUNCTION(ts_parser_included_ranges_nif) {
   return rev_list;
 }
 
-ERL_TS_FUNCTION(ts_parser_parse_nif) {
+ERL_TS_FUNCTION(parser_parse_nif) {
   /* TODO: */
   /* TSTree *ts_parser_parse( */
   /*   TSParser *self, */
@@ -528,7 +528,7 @@ ERL_TS_FUNCTION(ts_parser_parse_nif) {
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_parser_parse_with_options_nif) {
+ERL_TS_FUNCTION(parser_parse_with_options_nif) {
   /* TODO: */
   /* TSTree* ts_parser_parse_with_options( */
   /* TSParser *self, */
@@ -539,7 +539,7 @@ ERL_TS_FUNCTION(ts_parser_parse_with_options_nif) {
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_parser_parse_string_nif) {
+ERL_TS_FUNCTION(parser_parse_string_nif) {
   /* TODO: deal with the old_tree */
   /*   TSTree *ts_parser_parse_string( */
   /*   TSParser *self, */
@@ -569,7 +569,7 @@ ERL_TS_FUNCTION(ts_parser_parse_string_nif) {
   return term_tree;
 }
 
-ERL_TS_FUNCTION(ts_parser_parse_string_encoding_nif) {
+ERL_TS_FUNCTION(parser_parse_string_encoding_nif) {
   /* TODO: */
   /* TSTree *ts_parser_parse_string_encoding( */
   /*   TSParser *self, */
@@ -581,7 +581,7 @@ ERL_TS_FUNCTION(ts_parser_parse_string_encoding_nif) {
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_parser_reset_nif) {
+ERL_TS_FUNCTION(parser_reset_nif) {
   /* void ts_parser_reset(TSParser *self); */
   void *res_tsparser;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSParser, &res_tsparser));
@@ -591,7 +591,7 @@ ERL_TS_FUNCTION(ts_parser_reset_nif) {
   return atom_ok;
 }
 
-ERL_TS_FUNCTION(ts_parser_set_timeout_micros_nif) {
+ERL_TS_FUNCTION(parser_set_timeout_micros_nif) {
   /* void ts_parser_set_timeout_micros(TSParser *self, uint64_t timeout_micros); */
   void *res_tsparser;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSParser, &res_tsparser));
@@ -604,7 +604,7 @@ ERL_TS_FUNCTION(ts_parser_set_timeout_micros_nif) {
   return atom_ok;
 }
 
-ERL_TS_FUNCTION(ts_parser_timeout_micros_nif) {
+ERL_TS_FUNCTION(parser_timeout_micros_nif) {
   /* uint64_t ts_parser_timeout_micros(const TSParser *self); */
   void *res_tsparser;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSParser, &res_tsparser));
@@ -614,31 +614,31 @@ ERL_TS_FUNCTION(ts_parser_timeout_micros_nif) {
   return enif_make_uint64(env, result);
 }
 
-ERL_TS_FUNCTION(ts_parser_set_cancellation_flag_nif) {
+ERL_TS_FUNCTION(parser_set_cancellation_flag_nif) {
   /* TODO: */
   /* void ts_parser_set_cancellation_flag(TSParser *self, const size_t *flag); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_parser_cancellation_flag_nif) {
+ERL_TS_FUNCTION(parser_cancellation_flag_nif) {
   /* TODO: */
   /* const size_t *ts_parser_cancellation_flag(const TSParser *self); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_parser_set_logger_nif) {
+ERL_TS_FUNCTION(parser_set_logger_nif) {
   /* TODO: */
   /* void ts_parser_set_logger(TSParser *self, TSLogger logger); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_parser_logger_nif) {
+ERL_TS_FUNCTION(parser_logger_nif) {
   /* TODO: */
   /* TSLogger ts_parser_logger(const TSParser *self); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_parser_print_dot_graphs_nif) {
+ERL_TS_FUNCTION(parser_print_dot_graphs_nif) {
   /* TODO: */
   /* void ts_parser_print_dot_graphs(TSParser *self, int fd); */
   return atom_undefined;
@@ -648,7 +648,7 @@ ERL_TS_FUNCTION(ts_parser_print_dot_graphs_nif) {
 /* Section - Tree */
 /******************/
 
-ERL_TS_FUNCTION(ts_tree_copy_nif) {
+ERL_TS_FUNCTION(tree_copy_nif) {
   /* TSTree *ts_tree_copy(const TSTree *self); */
   void *res_tstree;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSTree, &res_tstree));
@@ -662,13 +662,13 @@ ERL_TS_FUNCTION(ts_tree_copy_nif) {
   return term_result;
 }
 
-ERL_TS_FUNCTION(ts_tree_delete_nif) {
+ERL_TS_FUNCTION(tree_delete_nif) {
   /* TODO: maybe we don´t need to implement it */
   /* void ts_tree_delete(TSTree *self); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_tree_root_node_nif) {
+ERL_TS_FUNCTION(tree_root_node_nif) {
   /* TSNode ts_tree_root_node(const TSTree *self); */
   void *res_tree;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSTree, &res_tree));
@@ -682,7 +682,7 @@ ERL_TS_FUNCTION(ts_tree_root_node_nif) {
   return term_node;
 }
 
-ERL_TS_FUNCTION(ts_tree_root_node_with_offset_nif) {
+ERL_TS_FUNCTION(tree_root_node_with_offset_nif) {
   /* TODO: */
   /*   TSNode ts_tree_root_node_with_offset( */
   /*   const TSTree *self, */
@@ -692,7 +692,7 @@ ERL_TS_FUNCTION(ts_tree_root_node_with_offset_nif) {
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_tree_language_nif) {
+ERL_TS_FUNCTION(tree_language_nif) {
   /* const TSLanguage *ts_tree_language(const TSTree *self); */
   void *res_tstree;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSTree, &res_tstree));
@@ -706,19 +706,19 @@ ERL_TS_FUNCTION(ts_tree_language_nif) {
   return term_result;
 }
 
-ERL_TS_FUNCTION(ts_tree_included_ranges_nif) {
+ERL_TS_FUNCTION(tree_included_ranges_nif) {
   /* TODO: segmentation fault when calling it 🤷 */
   /* TSRange *ts_tree_included_ranges(const TSTree *self, uint32_t *length); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_tree_edit_nif) {
+ERL_TS_FUNCTION(tree_edit_nif) {
   /* TODO: */
   /* void ts_tree_edit(TSTree *self, const TSInputEdit *edit); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_tree_get_changed_ranges_nif) {
+ERL_TS_FUNCTION(tree_get_changed_ranges_nif) {
   /* TODO: */
   /*   TSRange *ts_tree_get_changed_ranges( */
   /*   const TSTree *old_tree, */
@@ -728,7 +728,7 @@ ERL_TS_FUNCTION(ts_tree_get_changed_ranges_nif) {
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_tree_print_dot_graph_nif) {
+ERL_TS_FUNCTION(tree_print_dot_graph_nif) {
   /* TODO: */
   /* void ts_tree_print_dot_graph(const TSTree *self, int file_descriptor); */
   return atom_undefined;
@@ -738,7 +738,7 @@ ERL_TS_FUNCTION(ts_tree_print_dot_graph_nif) {
 /* Section - Node */
 /******************/
 
-ERL_TS_FUNCTION(ts_node_type_nif) {
+ERL_TS_FUNCTION(node_type_nif) {
   /* const char *ts_node_type(TSNode self); */
   void *res_node;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_node));
@@ -751,7 +751,7 @@ ERL_TS_FUNCTION(ts_node_type_nif) {
   return enif_make_binary(env, &bin);
 }
 
-ERL_TS_FUNCTION(ts_node_symbol_nif) {
+ERL_TS_FUNCTION(node_symbol_nif) {
   /* TSSymbol ts_node_symbol(TSNode self); */
   void *res_tsnode;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
@@ -761,7 +761,7 @@ ERL_TS_FUNCTION(ts_node_symbol_nif) {
   return enif_make_uint(env, symbol);
 }
 
-ERL_TS_FUNCTION(ts_node_language_nif) {
+ERL_TS_FUNCTION(node_language_nif) {
   /* const TSLanguage *ts_node_language(TSNode self); */
   void *res_tsnode;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
@@ -775,7 +775,7 @@ ERL_TS_FUNCTION(ts_node_language_nif) {
   return term_result;
 }
 
-ERL_TS_FUNCTION(ts_node_grammar_type_nif) {
+ERL_TS_FUNCTION(node_grammar_type_nif) {
   /* const char *ts_node_grammar_type(TSNode self); */
   void *res_node;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_node));
@@ -788,13 +788,13 @@ ERL_TS_FUNCTION(ts_node_grammar_type_nif) {
   return enif_make_binary(env, &bin);
 }
 
-ERL_TS_FUNCTION(ts_node_grammar_symbol_nif) {
+ERL_TS_FUNCTION(node_grammar_symbol_nif) {
   /* TODO: */
   /* TSSymbol ts_node_grammar_symbol(TSNode self); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_node_start_byte_nif) {
+ERL_TS_FUNCTION(node_start_byte_nif) {
   /* uint32_t ts_node_start_byte(TSNode self); */
   void *res_tsnode;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
@@ -804,7 +804,7 @@ ERL_TS_FUNCTION(ts_node_start_byte_nif) {
   return enif_make_uint(env, result);
 }
 
-ERL_TS_FUNCTION(ts_node_start_point_nif) {
+ERL_TS_FUNCTION(node_start_point_nif) {
   /* TSPoint ts_node_start_point(TSNode self); */
   void *res_tsnode;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
@@ -814,7 +814,7 @@ ERL_TS_FUNCTION(ts_node_start_point_nif) {
   return tspoint_to_map(env, &result);
 }
 
-ERL_TS_FUNCTION(ts_node_end_byte_nif) {
+ERL_TS_FUNCTION(node_end_byte_nif) {
   /* uint32_t ts_node_end_byte(TSNode self); */
   void *res_tsnode;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
@@ -824,7 +824,7 @@ ERL_TS_FUNCTION(ts_node_end_byte_nif) {
   return enif_make_uint(env, result);
 }
 
-ERL_TS_FUNCTION(ts_node_end_point_nif) {
+ERL_TS_FUNCTION(node_end_point_nif) {
   /* TSPoint ts_node_end_point(TSNode self); */
   void *res_tsnode;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
@@ -834,7 +834,7 @@ ERL_TS_FUNCTION(ts_node_end_point_nif) {
   return tspoint_to_map(env, &result);
 }
 
-ERL_TS_FUNCTION(ts_node_string_nif) {
+ERL_TS_FUNCTION(node_string_nif) {
   void *res_node;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_node));
   TSNode node = ((struct_TSNode *)res_node)->val;
@@ -846,7 +846,7 @@ ERL_TS_FUNCTION(ts_node_string_nif) {
   return enif_make_binary(env, &bin);
 }
 
-ERL_TS_FUNCTION(ts_node_is_null_nif) {
+ERL_TS_FUNCTION(node_is_null_nif) {
   /* bool ts_node_is_null(TSNode self); */
   void *res_node;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_node));
@@ -856,7 +856,7 @@ ERL_TS_FUNCTION(ts_node_is_null_nif) {
   return is_null ? atom_true : atom_false;
 }
 
-ERL_TS_FUNCTION(ts_node_is_named_nif) {
+ERL_TS_FUNCTION(node_is_named_nif) {
   /* bool ts_node_is_named(TSNode self); */
   void *res_node;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_node));
@@ -866,7 +866,7 @@ ERL_TS_FUNCTION(ts_node_is_named_nif) {
   return is_null ? atom_true : atom_false;
 }
 
-ERL_TS_FUNCTION(ts_node_is_missing_nif) {
+ERL_TS_FUNCTION(node_is_missing_nif) {
   /* bool ts_node_is_missing(TSNode self); */
   void *res_node;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_node));
@@ -876,7 +876,7 @@ ERL_TS_FUNCTION(ts_node_is_missing_nif) {
   return is_null ? atom_true : atom_false;
 }
 
-ERL_TS_FUNCTION(ts_node_is_extra_nif) {
+ERL_TS_FUNCTION(node_is_extra_nif) {
   /* bool ts_node_is_extra(TSNode self); */
   void *res_node;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_node));
@@ -886,7 +886,7 @@ ERL_TS_FUNCTION(ts_node_is_extra_nif) {
   return is_null ? atom_true : atom_false;
 }
 
-ERL_TS_FUNCTION(ts_node_has_changes_nif) {
+ERL_TS_FUNCTION(node_has_changes_nif) {
   /* bool ts_node_has_changes(TSNode self); */
   void *res_node;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_node));
@@ -896,7 +896,7 @@ ERL_TS_FUNCTION(ts_node_has_changes_nif) {
   return is_null ? atom_true : atom_false;
 }
 
-ERL_TS_FUNCTION(ts_node_has_error_nif) {
+ERL_TS_FUNCTION(node_has_error_nif) {
   /* bool ts_node_has_error(TSNode self); */
   void *res_node;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_node));
@@ -906,7 +906,7 @@ ERL_TS_FUNCTION(ts_node_has_error_nif) {
   return is_null ? atom_true : atom_false;
 }
 
-ERL_TS_FUNCTION(ts_node_is_error_nif) {
+ERL_TS_FUNCTION(node_is_error_nif) {
   /* bool ts_node_is_error(TSNode self); */
   void *res_node;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_node));
@@ -916,7 +916,7 @@ ERL_TS_FUNCTION(ts_node_is_error_nif) {
   return is_null ? atom_true : atom_false;
 }
 
-ERL_TS_FUNCTION(ts_node_parse_state_nif) {
+ERL_TS_FUNCTION(node_parse_state_nif) {
   /* TSStateId ts_node_parse_state(TSNode self); */
   void *res_tsnode;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
@@ -926,7 +926,7 @@ ERL_TS_FUNCTION(ts_node_parse_state_nif) {
   return enif_make_uint(env, result);
 }
 
-ERL_TS_FUNCTION(ts_node_next_parse_state_nif) {
+ERL_TS_FUNCTION(node_next_parse_state_nif) {
   /* TSStateId ts_node_next_parse_state(TSNode self); */
   void *res_tsnode;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
@@ -936,7 +936,7 @@ ERL_TS_FUNCTION(ts_node_next_parse_state_nif) {
   return enif_make_uint(env, result);
 }
 
-ERL_TS_FUNCTION(ts_node_parent_nif) {
+ERL_TS_FUNCTION(node_parent_nif) {
   /* TSNode ts_node_parent(TSNode self); */
   void *res_tsnode;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
@@ -950,7 +950,7 @@ ERL_TS_FUNCTION(ts_node_parent_nif) {
   return term_result;
 }
 
-ERL_TS_FUNCTION(ts_node_child_containing_descendant_nif) {
+ERL_TS_FUNCTION(node_child_containing_descendant_nif) {
   /* TSNode ts_node_child_containing_descendant(TSNode self, TSNode descendant); */
   void *res_tsnode;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
@@ -968,13 +968,13 @@ ERL_TS_FUNCTION(ts_node_child_containing_descendant_nif) {
   return term_result;
 }
 
-ERL_TS_FUNCTION(ts_node_child_with_descendant_nif) {
+ERL_TS_FUNCTION(node_child_with_descendant_nif) {
   /* TODO: TREE_SITTER_LANGUAGE_VERSION > 14 */
   /* TSNode ts_node_child_with_descendant(TSNode self, TSNode descendant); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_node_child_nif) {
+ERL_TS_FUNCTION(node_child_nif) {
   /* TSNode ts_node_child(TSNode self, uint32_t child_index); */
   void *res_tsnode;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
@@ -991,7 +991,7 @@ ERL_TS_FUNCTION(ts_node_child_nif) {
   return term_result;
 }
 
-ERL_TS_FUNCTION(ts_node_field_name_for_child_nif) {
+ERL_TS_FUNCTION(node_field_name_for_child_nif) {
   /* const char *ts_node_field_name_for_child(TSNode self, uint32_t
    * child_index); */
   void *res_node;
@@ -1008,14 +1008,14 @@ ERL_TS_FUNCTION(ts_node_field_name_for_child_nif) {
   return enif_make_binary(env, &bin);
 }
 
-ERL_TS_FUNCTION(ts_node_field_name_for_named_child_nif) {
+ERL_TS_FUNCTION(node_field_name_for_named_child_nif) {
   /* TODO: TREE_SITTER_LANGUAGE_VERSION > 14 */
   /* const char *ts_node_field_name_for_named_child(TSNode self, uint32_t
    * named_child_index); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_node_child_count_nif) {
+ERL_TS_FUNCTION(node_child_count_nif) {
   /* uint32_t ts_node_child_count(TSNode self); */
   void *res_node;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_node));
@@ -1026,7 +1026,7 @@ ERL_TS_FUNCTION(ts_node_child_count_nif) {
   return term_count;
 }
 
-ERL_TS_FUNCTION(ts_node_named_child_nif) {
+ERL_TS_FUNCTION(node_named_child_nif) {
   /* TSNode ts_node_named_child(TSNode self, uint32_t child_index); */
   void *res_node;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_node));
@@ -1044,7 +1044,7 @@ ERL_TS_FUNCTION(ts_node_named_child_nif) {
   return term_child;
 }
 
-ERL_TS_FUNCTION(ts_node_named_child_count_nif) {
+ERL_TS_FUNCTION(node_named_child_count_nif) {
   /* uint32_t ts_node_named_child_count(TSNode self); */
   void *res_node;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_node));
@@ -1055,7 +1055,7 @@ ERL_TS_FUNCTION(ts_node_named_child_count_nif) {
   return term_count;
 }
 
-ERL_TS_FUNCTION(ts_node_child_by_field_name_nif) {
+ERL_TS_FUNCTION(node_child_by_field_name_nif) {
   /*   TSNode ts_node_child_by_field_name( */
   /*   TSNode self, */
   /*   const char *name, */
@@ -1082,7 +1082,7 @@ ERL_TS_FUNCTION(ts_node_child_by_field_name_nif) {
   return term_result;
 }
 
-ERL_TS_FUNCTION(ts_node_child_by_field_id_nif) {
+ERL_TS_FUNCTION(node_child_by_field_id_nif) {
   /* TSNode ts_node_child_by_field_id(TSNode self, TSFieldId field_id); */
   void *res_tsnode;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
@@ -1099,7 +1099,7 @@ ERL_TS_FUNCTION(ts_node_child_by_field_id_nif) {
   return term_result;
 }
 
-ERL_TS_FUNCTION(ts_node_next_sibling_nif) {
+ERL_TS_FUNCTION(node_next_sibling_nif) {
   /* TSNode ts_node_next_sibling(TSNode self); */
   void *res_tsnode;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
@@ -1113,7 +1113,7 @@ ERL_TS_FUNCTION(ts_node_next_sibling_nif) {
   return term_result;
 }
 
-ERL_TS_FUNCTION(ts_node_prev_sibling_nif) {
+ERL_TS_FUNCTION(node_prev_sibling_nif) {
   /* TSNode ts_node_prev_sibling(TSNode self); */
   void *res_tsnode;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
@@ -1127,7 +1127,7 @@ ERL_TS_FUNCTION(ts_node_prev_sibling_nif) {
   return term_result;
 }
 
-ERL_TS_FUNCTION(ts_node_next_named_sibling_nif) {
+ERL_TS_FUNCTION(node_next_named_sibling_nif) {
   /* TSNode ts_node_next_named_sibling(TSNode self); */
   void *res_tsnode;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
@@ -1141,7 +1141,7 @@ ERL_TS_FUNCTION(ts_node_next_named_sibling_nif) {
   return term_result;
 }
 
-ERL_TS_FUNCTION(ts_node_prev_named_sibling_nif) {
+ERL_TS_FUNCTION(node_prev_named_sibling_nif) {
   /* TSNode ts_node_prev_named_sibling(TSNode self); */
   void *res_tsnode;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
@@ -1155,7 +1155,7 @@ ERL_TS_FUNCTION(ts_node_prev_named_sibling_nif) {
   return term_result;
 }
 
-ERL_TS_FUNCTION(ts_node_first_child_for_byte_nif) {
+ERL_TS_FUNCTION(node_first_child_for_byte_nif) {
   /* TSNode ts_node_first_child_for_byte(TSNode self, uint32_t byte); */
   void *res_tsnode;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
@@ -1172,7 +1172,7 @@ ERL_TS_FUNCTION(ts_node_first_child_for_byte_nif) {
   return term_result;
 }
 
-ERL_TS_FUNCTION(ts_node_first_named_child_for_byte_nif) {
+ERL_TS_FUNCTION(node_first_named_child_for_byte_nif) {
   /* TSNode ts_node_first_named_child_for_byte(TSNode self, uint32_t byte); */
   void *res_tsnode;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
@@ -1189,7 +1189,7 @@ ERL_TS_FUNCTION(ts_node_first_named_child_for_byte_nif) {
   return term_result;
 }
 
-ERL_TS_FUNCTION(ts_node_descendant_count_nif) {
+ERL_TS_FUNCTION(node_descendant_count_nif) {
   /* uint32_t ts_node_descendant_count(TSNode self); */
   void *res_tsnode;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
@@ -1199,7 +1199,7 @@ ERL_TS_FUNCTION(ts_node_descendant_count_nif) {
   return enif_make_uint(env, result);
 }
 
-ERL_TS_FUNCTION(ts_node_descendant_for_byte_range_nif) {
+ERL_TS_FUNCTION(node_descendant_for_byte_range_nif) {
   /* TSNode ts_node_descendant_for_byte_range(TSNode self, uint32_t start, uint32_t end); */
   void *res_tsnode;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
@@ -1219,7 +1219,7 @@ ERL_TS_FUNCTION(ts_node_descendant_for_byte_range_nif) {
   return term_result;
 }
 
-ERL_TS_FUNCTION(ts_node_descendant_for_point_range_nif) {
+ERL_TS_FUNCTION(node_descendant_for_point_range_nif) {
   /* TSNode ts_node_descendant_for_point_range(TSNode self, TSPoint start, TSPoint end); */
   void *res_tsnode;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
@@ -1237,7 +1237,7 @@ ERL_TS_FUNCTION(ts_node_descendant_for_point_range_nif) {
   return term_result;
 }
 
-ERL_TS_FUNCTION(ts_node_named_descendant_for_byte_range_nif) {
+ERL_TS_FUNCTION(node_named_descendant_for_byte_range_nif) {
   /* TSNode ts_node_named_descendant_for_byte_range(TSNode self, uint32_t start, uint32_t end); */
   void *res_tsnode;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
@@ -1257,7 +1257,7 @@ ERL_TS_FUNCTION(ts_node_named_descendant_for_byte_range_nif) {
   return term_result;
 }
 
-ERL_TS_FUNCTION(ts_node_named_descendant_for_point_range_nif) {
+ERL_TS_FUNCTION(node_named_descendant_for_point_range_nif) {
   /* TSNode ts_node_named_descendant_for_point_range(TSNode self, TSPoint start, TSPoint end); */
   void *res_tsnode;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
@@ -1275,13 +1275,13 @@ ERL_TS_FUNCTION(ts_node_named_descendant_for_point_range_nif) {
   return term_result;
 }
 
-ERL_TS_FUNCTION(ts_node_edit_nif) {
+ERL_TS_FUNCTION(node_edit_nif) {
   /* TODO: */
   /* void ts_node_edit(TSNode *self, const TSInputEdit *edit); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_node_eq_nif) {
+ERL_TS_FUNCTION(node_eq_nif) {
   /* bool ts_node_eq(TSNode self, TSNode other); */
   void *res_tsnode;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
@@ -1299,110 +1299,110 @@ ERL_TS_FUNCTION(ts_node_eq_nif) {
 /* Section - TreeCursor */
 /************************/
 
-ERL_TS_FUNCTION(ts_tree_cursor_new_nif) {
+ERL_TS_FUNCTION(tree_cursor_new_nif) {
   /* TODO: */
   /* TSTreeCursor ts_tree_cursor_new(TSNode node); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_tree_cursor_delete_nif) {
+ERL_TS_FUNCTION(tree_cursor_delete_nif) {
   /* TODO: */
   /* void ts_tree_cursor_delete(TSTreeCursor *self); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_tree_cursor_reset_nif) {
+ERL_TS_FUNCTION(tree_cursor_reset_nif) {
   /* TODO: */
   /* void ts_tree_cursor_reset(TSTreeCursor *self, TSNode node); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_tree_cursor_reset_to_nif) {
+ERL_TS_FUNCTION(tree_cursor_reset_to_nif) {
   /* TODO: */
   /* void ts_tree_cursor_reset_to(TSTreeCursor *dst, const TSTreeCursor *src); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_tree_cursor_current_node_nif) {
+ERL_TS_FUNCTION(tree_cursor_current_node_nif) {
   /* TODO: */
   /* TSNode ts_tree_cursor_current_node(const TSTreeCursor *self); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_tree_cursor_current_field_name_nif) {
+ERL_TS_FUNCTION(tree_cursor_current_field_name_nif) {
   /* TODO: */
   /* const char *ts_tree_cursor_current_field_name(const TSTreeCursor *self); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_tree_cursor_current_field_id_nif) {
+ERL_TS_FUNCTION(tree_cursor_current_field_id_nif) {
   /* TODO: */
   /* TSFieldId ts_tree_cursor_current_field_id(const TSTreeCursor *self); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_tree_cursor_goto_parent_nif) {
+ERL_TS_FUNCTION(tree_cursor_goto_parent_nif) {
   /* TODO: */
   /* bool ts_tree_cursor_goto_parent(TSTreeCursor *self); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_tree_cursor_goto_next_sibling_nif) {
+ERL_TS_FUNCTION(tree_cursor_goto_next_sibling_nif) {
   /* TODO: */
   /* bool ts_tree_cursor_goto_next_sibling(TSTreeCursor *self); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_tree_cursor_goto_previous_sibling_nif) {
+ERL_TS_FUNCTION(tree_cursor_goto_previous_sibling_nif) {
   /* TODO: */
   /* bool ts_tree_cursor_goto_previous_sibling(TSTreeCursor *self); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_tree_cursor_goto_first_child_nif) {
+ERL_TS_FUNCTION(tree_cursor_goto_first_child_nif) {
   /* TODO: */
   /* bool ts_tree_cursor_goto_first_child(TSTreeCursor *self); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_tree_cursor_goto_last_child_nif) {
+ERL_TS_FUNCTION(tree_cursor_goto_last_child_nif) {
   /* TODO: */
   /* bool ts_tree_cursor_goto_last_child(TSTreeCursor *self); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_tree_cursor_goto_descendant_nif) {
+ERL_TS_FUNCTION(tree_cursor_goto_descendant_nif) {
   /* TODO: */
   /* void ts_tree_cursor_goto_descendant(TSTreeCursor *self, uint32_t goal_descendant_index); */
 
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_tree_cursor_current_descendant_index_nif) {
+ERL_TS_FUNCTION(tree_cursor_current_descendant_index_nif) {
   /* TODO: */
   /* uint32_t ts_tree_cursor_current_descendant_index(const TSTreeCursor *self); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_tree_cursor_current_depth_nif) {
+ERL_TS_FUNCTION(tree_cursor_current_depth_nif) {
   /* TODO: */
   /* uint32_t ts_tree_cursor_current_depth(const TSTreeCursor *self); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_tree_cursor_goto_first_child_for_byte_nif) {
+ERL_TS_FUNCTION(tree_cursor_goto_first_child_for_byte_nif) {
   /* TODO: */
   /* int64_t ts_tree_cursor_goto_first_child_for_byte(TSTreeCursor *self, uint32_t goal_byte); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_tree_cursor_goto_first_child_for_point_nif) {
+ERL_TS_FUNCTION(tree_cursor_goto_first_child_for_point_nif) {
   /* TODO: */
   /* int64_t ts_tree_cursor_goto_first_child_for_point(TSTreeCursor *self, TSPoint goal_point); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_tree_cursor_copy_nif) {
+ERL_TS_FUNCTION(tree_cursor_copy_nif) {
   /* TODO: */
   /* TSTreeCursor ts_tree_cursor_copy(const TSTreeCursor *cursor); */
   return atom_undefined;
@@ -1412,7 +1412,7 @@ ERL_TS_FUNCTION(ts_tree_cursor_copy_nif) {
 /* Section - Query */
 /*******************/
 
-ERL_TS_FUNCTION(ts_query_new_nif) {
+ERL_TS_FUNCTION(query_new_nif) {
   /*   TSQuery *ts_query_new( */
   /*   const TSLanguage *language, */
   /*   const char *source, */
@@ -1448,13 +1448,13 @@ ERL_TS_FUNCTION(ts_query_new_nif) {
   return enif_make_tuple3(env, term_result, term_error_offset, term_error_type);
 }
 
-ERL_TS_FUNCTION(ts_query_delete_nif) {
+ERL_TS_FUNCTION(query_delete_nif) {
   /* TODO: */
   /* void ts_query_delete(TSQuery *self); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_query_pattern_count_nif) {
+ERL_TS_FUNCTION(query_pattern_count_nif) {
   /* uint32_t ts_query_pattern_count(const TSQuery *self); */
   void *res_tsquery;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSQuery, &res_tsquery));
@@ -1464,7 +1464,7 @@ ERL_TS_FUNCTION(ts_query_pattern_count_nif) {
   return enif_make_uint(env, result);
 }
 
-ERL_TS_FUNCTION(ts_query_capture_count_nif) {
+ERL_TS_FUNCTION(query_capture_count_nif) {
   /* uint32_t ts_query_capture_count(const TSQuery *self); */
   void *res_tsquery;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSQuery, &res_tsquery));
@@ -1474,7 +1474,7 @@ ERL_TS_FUNCTION(ts_query_capture_count_nif) {
   return enif_make_uint(env, result);
 }
 
-ERL_TS_FUNCTION(ts_query_string_count_nif) {
+ERL_TS_FUNCTION(query_string_count_nif) {
   /* uint32_t ts_query_string_count(const TSQuery *self); */
   void *res_tsquery;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSQuery, &res_tsquery));
@@ -1484,7 +1484,7 @@ ERL_TS_FUNCTION(ts_query_string_count_nif) {
   return enif_make_uint(env, result);
 }
 
-ERL_TS_FUNCTION(ts_query_start_byte_for_pattern_nif) {
+ERL_TS_FUNCTION(query_start_byte_for_pattern_nif) {
   /* uint32_t ts_query_start_byte_for_pattern(const TSQuery *self, uint32_t pattern_index); */
   void *res_tsquery;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSQuery, &res_tsquery));
@@ -1497,7 +1497,7 @@ ERL_TS_FUNCTION(ts_query_start_byte_for_pattern_nif) {
   return enif_make_uint(env, result);
 }
 
-ERL_TS_FUNCTION(ts_query_end_byte_for_pattern_nif) {
+ERL_TS_FUNCTION(query_end_byte_for_pattern_nif) {
   /* uint32_t ts_query_end_byte_for_pattern(const TSQuery *self, uint32_t pattern_index); */
   void *res_tsquery;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSQuery, &res_tsquery));
@@ -1510,7 +1510,7 @@ ERL_TS_FUNCTION(ts_query_end_byte_for_pattern_nif) {
   return enif_make_uint(env, result);
 }
 
-ERL_TS_FUNCTION(ts_query_predicates_for_pattern_nif) {
+ERL_TS_FUNCTION(query_predicates_for_pattern_nif) {
   /* TODO: */
   /*   const TSQueryPredicateStep *ts_query_predicates_for_pattern( */
   /*   const TSQuery *self, */
@@ -1520,7 +1520,7 @@ ERL_TS_FUNCTION(ts_query_predicates_for_pattern_nif) {
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_query_is_pattern_rooted_nif) {
+ERL_TS_FUNCTION(query_is_pattern_rooted_nif) {
   /* bool ts_query_is_pattern_rooted(const TSQuery *self, uint32_t pattern_index); */
   void *res_tsquery;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSQuery, &res_tsquery));
@@ -1533,7 +1533,7 @@ ERL_TS_FUNCTION(ts_query_is_pattern_rooted_nif) {
   return result? atom_true : atom_false;
 }
 
-ERL_TS_FUNCTION(ts_query_is_pattern_non_local_nif) {
+ERL_TS_FUNCTION(query_is_pattern_non_local_nif) {
   /* bool ts_query_is_pattern_non_local(const TSQuery *self, uint32_t pattern_index); */
   void *res_tsquery;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSQuery, &res_tsquery));
@@ -1546,7 +1546,7 @@ ERL_TS_FUNCTION(ts_query_is_pattern_non_local_nif) {
   return result? atom_true : atom_false;
 }
 
-ERL_TS_FUNCTION(ts_query_is_pattern_guaranteed_at_step_nif) {
+ERL_TS_FUNCTION(query_is_pattern_guaranteed_at_step_nif) {
   /* bool ts_query_is_pattern_guaranteed_at_step(const TSQuery *self, uint32_t byte_offset); */
   void *res_tsquery;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSQuery, &res_tsquery));
@@ -1559,7 +1559,7 @@ ERL_TS_FUNCTION(ts_query_is_pattern_guaranteed_at_step_nif) {
   return result? atom_true : atom_false;
 }
 
-ERL_TS_FUNCTION(ts_query_capture_name_for_id_nif) {
+ERL_TS_FUNCTION(query_capture_name_for_id_nif) {
   /*   const char *ts_query_capture_name_for_id( */
   /*   const TSQuery *self, */
   /*   uint32_t index, */
@@ -1582,7 +1582,7 @@ ERL_TS_FUNCTION(ts_query_capture_name_for_id_nif) {
                           enif_make_uint(env, length));
 }
 
-ERL_TS_FUNCTION(ts_query_capture_quantifier_for_id_nif) {
+ERL_TS_FUNCTION(query_capture_quantifier_for_id_nif) {
   /* TODO: */
   /*   TSQuantifier ts_query_capture_quantifier_for_id( */
   /*   const TSQuery *self, */
@@ -1592,7 +1592,7 @@ ERL_TS_FUNCTION(ts_query_capture_quantifier_for_id_nif) {
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_query_string_value_for_id_nif) {
+ERL_TS_FUNCTION(query_string_value_for_id_nif) {
   /* TODO: segfault */
   /*   const char *ts_query_string_value_for_id( */
   /*   const TSQuery *self, */
@@ -1615,19 +1615,19 @@ ERL_TS_FUNCTION(ts_query_string_value_for_id_nif) {
   return enif_make_tuple2(env, enif_make_binary(env, &bin), enif_make_uint(env, length));
 }
 
-ERL_TS_FUNCTION(ts_query_disable_capture_nif) {
+ERL_TS_FUNCTION(query_disable_capture_nif) {
   /* TODO: */
   /* void ts_query_disable_capture(TSQuery *self, const char *name, uint32_t length); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_query_disable_pattern_nif) {
+ERL_TS_FUNCTION(query_disable_pattern_nif) {
   /* TODO: */
   /* void ts_query_disable_pattern(TSQuery *self, uint32_t pattern_index); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_query_capture_nif) {
+ERL_TS_FUNCTION(query_capture_nif) {
   void *res_tsnode;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
   TSNode tsnode = ((struct_TSNode *)res_tsnode)->val;
@@ -1667,7 +1667,7 @@ ERL_TS_FUNCTION(ts_query_capture_nif) {
   return rev_list;
 }
 
-ERL_TS_FUNCTION(ts_query_cursor_new_nif) {
+ERL_TS_FUNCTION(query_cursor_new_nif) {
   /* TSQueryCursor *ts_query_cursor_new(void); */
   TSQueryCursor *result = ts_query_cursor_new();
   struct_TSQueryCursor *res_result = enif_alloc_resource(res_TSQueryCursor, sizeof(struct_TSQueryCursor));
@@ -1677,13 +1677,13 @@ ERL_TS_FUNCTION(ts_query_cursor_new_nif) {
   return term_result;
 }
 
-ERL_TS_FUNCTION(ts_query_cursor_delete_nif) {
+ERL_TS_FUNCTION(query_cursor_delete_nif) {
   /* TODO: */
   /* void ts_query_cursor_delete(TSQueryCursor *self); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_query_cursor_exec_nif) {
+ERL_TS_FUNCTION(query_cursor_exec_nif) {
   /* void ts_query_cursor_exec(TSQueryCursor *self, const TSQuery *query, TSNode node); */
   void *res_tsquerycursor;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSQueryCursor, &res_tsquerycursor));
@@ -1701,7 +1701,7 @@ ERL_TS_FUNCTION(ts_query_cursor_exec_nif) {
   return atom_ok;
 }
 
-ERL_TS_FUNCTION(ts_query_cursor_exec_with_options_nif) {
+ERL_TS_FUNCTION(query_cursor_exec_with_options_nif) {
   /* TODO: */
   /*   void ts_query_cursor_exec_with_options( */
   /*   TSQueryCursor *self, */
@@ -1712,7 +1712,7 @@ ERL_TS_FUNCTION(ts_query_cursor_exec_with_options_nif) {
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_query_cursor_did_exceed_match_limit_nif) {
+ERL_TS_FUNCTION(query_cursor_did_exceed_match_limit_nif) {
   /* bool ts_query_cursor_did_exceed_match_limit(const TSQueryCursor *self); */
   void *res_tsquerycursor;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSQueryCursor, &res_tsquerycursor));
@@ -1722,7 +1722,7 @@ ERL_TS_FUNCTION(ts_query_cursor_did_exceed_match_limit_nif) {
   return result? atom_true : atom_false;
 }
 
-ERL_TS_FUNCTION(ts_query_cursor_match_limit_nif) {
+ERL_TS_FUNCTION(query_cursor_match_limit_nif) {
   /* uint32_t ts_query_cursor_match_limit(const TSQueryCursor *self); */
   void *res_tsquerycursor;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSQueryCursor, &res_tsquerycursor));
@@ -1732,49 +1732,49 @@ ERL_TS_FUNCTION(ts_query_cursor_match_limit_nif) {
   return enif_make_uint(env, result);
 }
 
-ERL_TS_FUNCTION(ts_query_cursor_set_match_limit_nif) {
+ERL_TS_FUNCTION(query_cursor_set_match_limit_nif) {
   /* TODO: */
   /* void ts_query_cursor_set_match_limit(TSQueryCursor *self, uint32_t limit); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_query_cursor_set_timeout_micros_nif) {
+ERL_TS_FUNCTION(query_cursor_set_timeout_micros_nif) {
   /* TODO: */
   /* void ts_query_cursor_set_timeout_micros(TSQueryCursor *self, uint64_t timeout_micros); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_query_cursor_timeout_micros_nif) {
+ERL_TS_FUNCTION(query_cursor_timeout_micros_nif) {
   /* TODO: */
   /* uint64_t ts_query_cursor_timeout_micros(const TSQueryCursor *self); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_query_cursor_set_byte_range_nif) {
+ERL_TS_FUNCTION(query_cursor_set_byte_range_nif) {
   /* TODO: */
   /* bool ts_query_cursor_set_byte_range(TSQueryCursor *self, uint32_t start_byte, uint32_t end_byte); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_query_cursor_set_point_range_nif) {
+ERL_TS_FUNCTION(query_cursor_set_point_range_nif) {
   /* TODO: */
   /* bool ts_query_cursor_set_point_range(TSQueryCursor *self, TSPoint start_point, TSPoint end_point); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_query_cursor_next_match_nif) {
+ERL_TS_FUNCTION(query_cursor_next_match_nif) {
   /* TODO: */
   /* bool ts_query_cursor_next_match(TSQueryCursor *self, TSQueryMatch *match); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_query_cursor_remove_match_nif) {
+ERL_TS_FUNCTION(query_cursor_remove_match_nif) {
   /* TODO: */
   /* void ts_query_cursor_remove_match(TSQueryCursor *self, uint32_t match_id); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_query_cursor_next_capture_nif) {
+ERL_TS_FUNCTION(query_cursor_next_capture_nif) {
   /* TODO: */
   /*   bool ts_query_cursor_next_capture( */
   /*   TSQueryCursor *self, */
@@ -1784,7 +1784,7 @@ ERL_TS_FUNCTION(ts_query_cursor_next_capture_nif) {
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_query_cursor_set_max_start_depth_nif) {
+ERL_TS_FUNCTION(query_cursor_set_max_start_depth_nif) {
   /* TODO: */
   /* void ts_query_cursor_set_max_start_depth(TSQueryCursor *self, uint32_t max_start_depth); */
   return atom_undefined;
@@ -1794,19 +1794,19 @@ ERL_TS_FUNCTION(ts_query_cursor_set_max_start_depth_nif) {
 /* Section - Language */
 /**********************/
 
-ERL_TS_FUNCTION(ts_language_copy_nif) {
+ERL_TS_FUNCTION(language_copy_nif) {
   /* TODO: */
   /* const TSLanguage *ts_language_copy(const TSLanguage *self); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_language_delete_nif) {
+ERL_TS_FUNCTION(language_delete_nif) {
   /* TODO: */
   /* void ts_language_delete(const TSLanguage *self); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_language_symbol_count_nif) {
+ERL_TS_FUNCTION(language_symbol_count_nif) {
   /* uint32_t ts_language_symbol_count(const TSLanguage *self); */
   void *res_tslanguage;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSLanguage, &res_tslanguage));
@@ -1816,7 +1816,7 @@ ERL_TS_FUNCTION(ts_language_symbol_count_nif) {
   return enif_make_uint(env, result);
 }
 
-ERL_TS_FUNCTION(ts_language_state_count_nif) {
+ERL_TS_FUNCTION(language_state_count_nif) {
   /* uint32_t ts_language_state_count(const TSLanguage *self); */
   void *res_tslanguage;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSLanguage, &res_tslanguage));
@@ -1826,7 +1826,7 @@ ERL_TS_FUNCTION(ts_language_state_count_nif) {
   return enif_make_uint(env, result);
 }
 
-ERL_TS_FUNCTION(ts_language_symbol_name_nif) {
+ERL_TS_FUNCTION(language_symbol_name_nif) {
   /* const char *ts_language_symbol_name(const TSLanguage *self, TSSymbol symbol); */
   void *res_tslanguage;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSLanguage, &res_tslanguage));
@@ -1842,7 +1842,7 @@ ERL_TS_FUNCTION(ts_language_symbol_name_nif) {
   return enif_make_binary(env, &bin);
 }
 
-ERL_TS_FUNCTION(ts_language_symbol_for_name_nif) {
+ERL_TS_FUNCTION(language_symbol_for_name_nif) {
   /* TODO: */
   /*   TSSymbol ts_language_symbol_for_name( */
   /*   const TSLanguage *self, */
@@ -1853,7 +1853,7 @@ ERL_TS_FUNCTION(ts_language_symbol_for_name_nif) {
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_language_field_count_nif) {
+ERL_TS_FUNCTION(language_field_count_nif) {
   /* uint32_t ts_language_field_count(const TSLanguage *self); */
   void *res_tslanguage;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSLanguage, &res_tslanguage));
@@ -1863,7 +1863,7 @@ ERL_TS_FUNCTION(ts_language_field_count_nif) {
   return enif_make_uint(env, result);
 }
 
-ERL_TS_FUNCTION(ts_language_field_name_for_id_nif) {
+ERL_TS_FUNCTION(language_field_name_for_id_nif) {
   /* const char *ts_language_field_name_for_id(const TSLanguage *self, TSFieldId id); */
   void *res_tslanguage;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSLanguage, &res_tslanguage));
@@ -1880,7 +1880,7 @@ ERL_TS_FUNCTION(ts_language_field_name_for_id_nif) {
   /* return enif_make_string(env, result, ERL_NIF_LATIN1); */
 }
 
-ERL_TS_FUNCTION(ts_language_field_id_for_name_nif) {
+ERL_TS_FUNCTION(language_field_id_for_name_nif) {
   /* TSFieldId ts_language_field_id_for_name(const TSLanguage *self, const char *name, uint32_t name_length); */
   void *res_tslanguage;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSLanguage, &res_tslanguage));
@@ -1898,7 +1898,7 @@ ERL_TS_FUNCTION(ts_language_field_id_for_name_nif) {
   return enif_make_uint(env, result);
 }
 
-ERL_TS_FUNCTION(ts_language_symbol_type_nif) {
+ERL_TS_FUNCTION(language_symbol_type_nif) {
   /* TSSymbolType ts_language_symbol_type(const TSLanguage *self, TSSymbol symbol); */
   void *res_tslanguage;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSLanguage, &res_tslanguage));
@@ -1911,7 +1911,7 @@ ERL_TS_FUNCTION(ts_language_symbol_type_nif) {
   return tssymbol_type_to_atom(env, symbol_type);
 }
 
-ERL_TS_FUNCTION(ts_language_version_nif) {
+ERL_TS_FUNCTION(language_version_nif) {
   void *res_language;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSLanguage, &res_language));
 
@@ -1920,13 +1920,13 @@ ERL_TS_FUNCTION(ts_language_version_nif) {
   return enif_make_uint(env, ts_language_version(language));
 }
 
-ERL_TS_FUNCTION(ts_language_next_state_nif) {
+ERL_TS_FUNCTION(language_next_state_nif) {
   /* TODO: */
   /* TSStateId ts_language_next_state(const TSLanguage *self, TSStateId state, TSSymbol symbol); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_language_name_nif) {
+ERL_TS_FUNCTION(language_name_nif) {
   /* TODO: TREE_SITTER_LANGUAGE_VERSION > 14 */
   /* const char *ts_language_name(const TSLanguage *self); */
   return atom_undefined;
@@ -1936,49 +1936,49 @@ ERL_TS_FUNCTION(ts_language_name_nif) {
 /* Section - Lookahead Iterator */
 /********************************/
 
-ERL_TS_FUNCTION(ts_lookahead_iterator_new_nif) {
+ERL_TS_FUNCTION(lookahead_iterator_new_nif) {
   /* TODO: */
   /* TSLookaheadIterator *ts_lookahead_iterator_new(const TSLanguage *self, TSStateId state); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_lookahead_iterator_delete_nif) {
+ERL_TS_FUNCTION(lookahead_iterator_delete_nif) {
   /* TODO: */
   /* void ts_lookahead_iterator_delete(TSLookaheadIterator *self); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_lookahead_iterator_reset_state_nif) {
+ERL_TS_FUNCTION(lookahead_iterator_reset_state_nif) {
   /* TODO: */
   /* bool ts_lookahead_iterator_reset_state(TSLookaheadIterator *self, TSStateId state); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_lookahead_iterator_reset_nif) {
+ERL_TS_FUNCTION(lookahead_iterator_reset_nif) {
   /* TODO: */
   /* bool ts_lookahead_iterator_reset(TSLookaheadIterator *self, const TSLanguage *language, TSStateId state); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_lookahead_iterator_language_nif) {
+ERL_TS_FUNCTION(lookahead_iterator_language_nif) {
   /* TODO: */
   /* const TSLanguage *ts_lookahead_iterator_language(const TSLookaheadIterator *self); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_lookahead_iterator_next_nif) {
+ERL_TS_FUNCTION(lookahead_iterator_next_nif) {
   /* TODO: */
   /* bool ts_lookahead_iterator_next(TSLookaheadIterator *self); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_lookahead_iterator_current_symbol_nif) {
+ERL_TS_FUNCTION(lookahead_iterator_current_symbol_nif) {
   /* TODO: */
   /* TSSymbol ts_lookahead_iterator_current_symbol(const TSLookaheadIterator *self); */
   return atom_undefined;
 }
 
-ERL_TS_FUNCTION(ts_lookahead_iterator_current_symbol_name_nif) {
+ERL_TS_FUNCTION(lookahead_iterator_current_symbol_name_nif) {
   /* TODO: */
   /* const char *ts_lookahead_iterator_current_symbol_name(const TSLookaheadIterator *self); */
   return atom_undefined;
@@ -2001,147 +2001,147 @@ ERL_TS_FUNCTION(tree_sitter_erlang_nif) {
 
 static ErlNifFunc nif_funcs[] = {
   ERL_TS_FUNCTION_ARRAY(tree_sitter_erlang, 0),
-  ERL_TS_FUNCTION_ARRAY(ts_parser_new, 0),
-  ERL_TS_FUNCTION_ARRAY(ts_parser_delete, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_parser_language, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_parser_set_language, 2),
-  ERL_TS_FUNCTION_ARRAY(ts_parser_set_included_ranges, 3),
-  ERL_TS_FUNCTION_ARRAY(ts_parser_included_ranges, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_parser_parse, 3),
-  ERL_TS_FUNCTION_ARRAY(ts_parser_parse_with_options, 4),
-  ERL_TS_FUNCTION_ARRAY(ts_parser_parse_string, 3),
-  ERL_TS_FUNCTION_ARRAY(ts_parser_parse_string_encoding, 5),
-  ERL_TS_FUNCTION_ARRAY(ts_parser_reset, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_parser_set_timeout_micros, 2),
-  ERL_TS_FUNCTION_ARRAY(ts_parser_timeout_micros, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_parser_set_cancellation_flag, 2),
-  ERL_TS_FUNCTION_ARRAY(ts_parser_cancellation_flag, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_parser_set_logger, 2),
-  ERL_TS_FUNCTION_ARRAY(ts_parser_logger, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_parser_print_dot_graphs, 2),
-  ERL_TS_FUNCTION_ARRAY(ts_tree_copy, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_tree_delete, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_tree_root_node, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_tree_root_node_with_offset, 3),
-  ERL_TS_FUNCTION_ARRAY(ts_tree_language, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_tree_included_ranges, 2),
-  ERL_TS_FUNCTION_ARRAY(ts_tree_edit, 2),
-  ERL_TS_FUNCTION_ARRAY(ts_tree_get_changed_ranges, 3),
-  ERL_TS_FUNCTION_ARRAY(ts_tree_print_dot_graph, 2),
-  ERL_TS_FUNCTION_ARRAY(ts_node_type, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_node_symbol, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_node_language, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_node_grammar_type, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_node_grammar_symbol, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_node_start_byte, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_node_start_point, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_node_end_byte, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_node_end_point, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_node_string, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_node_is_null, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_node_is_named, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_node_is_missing, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_node_is_extra, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_node_has_changes, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_node_has_error, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_node_is_error, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_node_parse_state, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_node_next_parse_state, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_node_parent, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_node_child_containing_descendant, 2),
-  ERL_TS_FUNCTION_ARRAY(ts_node_child_with_descendant, 2),
-  ERL_TS_FUNCTION_ARRAY(ts_node_child, 2),
-  ERL_TS_FUNCTION_ARRAY(ts_node_field_name_for_child, 2),
-  ERL_TS_FUNCTION_ARRAY(ts_node_field_name_for_named_child, 2),
-  ERL_TS_FUNCTION_ARRAY(ts_node_child_count, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_node_named_child, 2),
-  ERL_TS_FUNCTION_ARRAY(ts_node_named_child_count, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_node_child_by_field_name, 2),
-  ERL_TS_FUNCTION_ARRAY(ts_node_child_by_field_id, 2),
-  ERL_TS_FUNCTION_ARRAY(ts_node_next_sibling, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_node_prev_sibling, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_node_next_named_sibling, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_node_prev_named_sibling, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_node_first_child_for_byte, 2),
-  ERL_TS_FUNCTION_ARRAY(ts_node_first_named_child_for_byte, 2),
-  ERL_TS_FUNCTION_ARRAY(ts_node_descendant_count, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_node_descendant_for_byte_range, 3),
-  ERL_TS_FUNCTION_ARRAY(ts_node_descendant_for_point_range, 3),
-  ERL_TS_FUNCTION_ARRAY(ts_node_named_descendant_for_byte_range, 3),
-  ERL_TS_FUNCTION_ARRAY(ts_node_named_descendant_for_point_range, 3),
-  ERL_TS_FUNCTION_ARRAY(ts_node_edit, 2),
-  ERL_TS_FUNCTION_ARRAY(ts_node_eq, 2),
-  ERL_TS_FUNCTION_ARRAY(ts_tree_cursor_new, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_tree_cursor_delete, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_tree_cursor_reset, 2),
-  ERL_TS_FUNCTION_ARRAY(ts_tree_cursor_reset_to, 2),
-  ERL_TS_FUNCTION_ARRAY(ts_tree_cursor_current_node, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_tree_cursor_current_field_name, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_tree_cursor_current_field_id, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_tree_cursor_goto_parent, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_tree_cursor_goto_next_sibling, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_tree_cursor_goto_previous_sibling, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_tree_cursor_goto_first_child, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_tree_cursor_goto_last_child, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_tree_cursor_goto_descendant, 2),
-  ERL_TS_FUNCTION_ARRAY(ts_tree_cursor_current_descendant_index, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_tree_cursor_current_depth, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_tree_cursor_goto_first_child_for_byte, 2),
-  ERL_TS_FUNCTION_ARRAY(ts_tree_cursor_goto_first_child_for_point, 2),
-  ERL_TS_FUNCTION_ARRAY(ts_tree_cursor_copy, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_query_new, 2),
-  ERL_TS_FUNCTION_ARRAY(ts_query_delete, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_query_pattern_count, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_query_capture_count, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_query_string_count, 1),
-  ERL_TS_FUNCTION_ARRAY(ts_query_start_byte_for_pattern, 2),
-  ERL_TS_FUNCTION_ARRAY(ts_query_end_byte_for_pattern, 2),
-  ERL_TS_FUNCTION_ARRAY(ts_query_predicates_for_pattern, 3),
-  ERL_TS_FUNCTION_ARRAY(ts_query_is_pattern_rooted, 2),
-  ERL_TS_FUNCTION_ARRAY(ts_query_is_pattern_non_local, 2),
-  ERL_TS_FUNCTION_ARRAY(ts_query_is_pattern_guaranteed_at_step, 2),
-  ERL_TS_FUNCTION_ARRAY(ts_query_capture_name_for_id, 3),
-  ERL_TS_FUNCTION_ARRAY(ts_query_capture_quantifier_for_id, 3),
-  ERL_TS_FUNCTION_ARRAY(ts_query_string_value_for_id, 2),
-  ERL_TS_FUNCTION_ARRAY(ts_query_disable_capture, 3),
-  ERL_TS_FUNCTION_ARRAY(ts_query_disable_pattern, 2),
-  ERL_TS_FUNCTION_ARRAY(ts_query_capture, 2),
-  ERL_TS_FUNCTION_ARRAY(ts_query_cursor_new,0),
-  ERL_TS_FUNCTION_ARRAY(ts_query_cursor_delete,1),
-  ERL_TS_FUNCTION_ARRAY(ts_query_cursor_exec,3),
-  ERL_TS_FUNCTION_ARRAY(ts_query_cursor_exec_with_options,4),
-  ERL_TS_FUNCTION_ARRAY(ts_query_cursor_did_exceed_match_limit,1),
-  ERL_TS_FUNCTION_ARRAY(ts_query_cursor_match_limit,1),
-  ERL_TS_FUNCTION_ARRAY(ts_query_cursor_set_match_limit,2),
-  ERL_TS_FUNCTION_ARRAY(ts_query_cursor_set_timeout_micros,2),
-  ERL_TS_FUNCTION_ARRAY(ts_query_cursor_timeout_micros,1),
-  ERL_TS_FUNCTION_ARRAY(ts_query_cursor_set_byte_range,3),
-  ERL_TS_FUNCTION_ARRAY(ts_query_cursor_set_point_range,3),
-  ERL_TS_FUNCTION_ARRAY(ts_query_cursor_next_match,2),
-  ERL_TS_FUNCTION_ARRAY(ts_query_cursor_remove_match,2),
-  ERL_TS_FUNCTION_ARRAY(ts_query_cursor_next_capture,3),
-  ERL_TS_FUNCTION_ARRAY(ts_query_cursor_set_max_start_depth,2),
-  ERL_TS_FUNCTION_ARRAY(ts_language_copy,1),
-  ERL_TS_FUNCTION_ARRAY(ts_language_delete,1),
-  ERL_TS_FUNCTION_ARRAY(ts_language_symbol_count,1),
-  ERL_TS_FUNCTION_ARRAY(ts_language_state_count,1),
-  ERL_TS_FUNCTION_ARRAY(ts_language_symbol_name,2),
-  ERL_TS_FUNCTION_ARRAY(ts_language_symbol_for_name,4),
-  ERL_TS_FUNCTION_ARRAY(ts_language_field_count,1),
-  ERL_TS_FUNCTION_ARRAY(ts_language_field_name_for_id,2),
-  ERL_TS_FUNCTION_ARRAY(ts_language_field_id_for_name,2),
-  ERL_TS_FUNCTION_ARRAY(ts_language_symbol_type,2),
-  ERL_TS_FUNCTION_ARRAY(ts_language_version,1),
-  ERL_TS_FUNCTION_ARRAY(ts_language_next_state,3),
-  ERL_TS_FUNCTION_ARRAY(ts_language_name,1),
-  ERL_TS_FUNCTION_ARRAY(ts_lookahead_iterator_new,2),
-  ERL_TS_FUNCTION_ARRAY(ts_lookahead_iterator_delete,1),
-  ERL_TS_FUNCTION_ARRAY(ts_lookahead_iterator_reset_state,2),
-  ERL_TS_FUNCTION_ARRAY(ts_lookahead_iterator_reset,3),
-  ERL_TS_FUNCTION_ARRAY(ts_lookahead_iterator_language,1),
-  ERL_TS_FUNCTION_ARRAY(ts_lookahead_iterator_next,1),
-  ERL_TS_FUNCTION_ARRAY(ts_lookahead_iterator_current_symbol,1),
-  ERL_TS_FUNCTION_ARRAY(ts_lookahead_iterator_current_symbol_name,1)
+  ERL_TS_FUNCTION_ARRAY(parser_new, 0),
+  ERL_TS_FUNCTION_ARRAY(parser_delete, 1),
+  ERL_TS_FUNCTION_ARRAY(parser_language, 1),
+  ERL_TS_FUNCTION_ARRAY(parser_set_language, 2),
+  ERL_TS_FUNCTION_ARRAY(parser_set_included_ranges, 3),
+  ERL_TS_FUNCTION_ARRAY(parser_included_ranges, 1),
+  ERL_TS_FUNCTION_ARRAY(parser_parse, 3),
+  ERL_TS_FUNCTION_ARRAY(parser_parse_with_options, 4),
+  ERL_TS_FUNCTION_ARRAY(parser_parse_string, 3),
+  ERL_TS_FUNCTION_ARRAY(parser_parse_string_encoding, 5),
+  ERL_TS_FUNCTION_ARRAY(parser_reset, 1),
+  ERL_TS_FUNCTION_ARRAY(parser_set_timeout_micros, 2),
+  ERL_TS_FUNCTION_ARRAY(parser_timeout_micros, 1),
+  ERL_TS_FUNCTION_ARRAY(parser_set_cancellation_flag, 2),
+  ERL_TS_FUNCTION_ARRAY(parser_cancellation_flag, 1),
+  ERL_TS_FUNCTION_ARRAY(parser_set_logger, 2),
+  ERL_TS_FUNCTION_ARRAY(parser_logger, 1),
+  ERL_TS_FUNCTION_ARRAY(parser_print_dot_graphs, 2),
+  ERL_TS_FUNCTION_ARRAY(tree_copy, 1),
+  ERL_TS_FUNCTION_ARRAY(tree_delete, 1),
+  ERL_TS_FUNCTION_ARRAY(tree_root_node, 1),
+  ERL_TS_FUNCTION_ARRAY(tree_root_node_with_offset, 3),
+  ERL_TS_FUNCTION_ARRAY(tree_language, 1),
+  ERL_TS_FUNCTION_ARRAY(tree_included_ranges, 2),
+  ERL_TS_FUNCTION_ARRAY(tree_edit, 2),
+  ERL_TS_FUNCTION_ARRAY(tree_get_changed_ranges, 3),
+  ERL_TS_FUNCTION_ARRAY(tree_print_dot_graph, 2),
+  ERL_TS_FUNCTION_ARRAY(node_type, 1),
+  ERL_TS_FUNCTION_ARRAY(node_symbol, 1),
+  ERL_TS_FUNCTION_ARRAY(node_language, 1),
+  ERL_TS_FUNCTION_ARRAY(node_grammar_type, 1),
+  ERL_TS_FUNCTION_ARRAY(node_grammar_symbol, 1),
+  ERL_TS_FUNCTION_ARRAY(node_start_byte, 1),
+  ERL_TS_FUNCTION_ARRAY(node_start_point, 1),
+  ERL_TS_FUNCTION_ARRAY(node_end_byte, 1),
+  ERL_TS_FUNCTION_ARRAY(node_end_point, 1),
+  ERL_TS_FUNCTION_ARRAY(node_string, 1),
+  ERL_TS_FUNCTION_ARRAY(node_is_null, 1),
+  ERL_TS_FUNCTION_ARRAY(node_is_named, 1),
+  ERL_TS_FUNCTION_ARRAY(node_is_missing, 1),
+  ERL_TS_FUNCTION_ARRAY(node_is_extra, 1),
+  ERL_TS_FUNCTION_ARRAY(node_has_changes, 1),
+  ERL_TS_FUNCTION_ARRAY(node_has_error, 1),
+  ERL_TS_FUNCTION_ARRAY(node_is_error, 1),
+  ERL_TS_FUNCTION_ARRAY(node_parse_state, 1),
+  ERL_TS_FUNCTION_ARRAY(node_next_parse_state, 1),
+  ERL_TS_FUNCTION_ARRAY(node_parent, 1),
+  ERL_TS_FUNCTION_ARRAY(node_child_containing_descendant, 2),
+  ERL_TS_FUNCTION_ARRAY(node_child_with_descendant, 2),
+  ERL_TS_FUNCTION_ARRAY(node_child, 2),
+  ERL_TS_FUNCTION_ARRAY(node_field_name_for_child, 2),
+  ERL_TS_FUNCTION_ARRAY(node_field_name_for_named_child, 2),
+  ERL_TS_FUNCTION_ARRAY(node_child_count, 1),
+  ERL_TS_FUNCTION_ARRAY(node_named_child, 2),
+  ERL_TS_FUNCTION_ARRAY(node_named_child_count, 1),
+  ERL_TS_FUNCTION_ARRAY(node_child_by_field_name, 2),
+  ERL_TS_FUNCTION_ARRAY(node_child_by_field_id, 2),
+  ERL_TS_FUNCTION_ARRAY(node_next_sibling, 1),
+  ERL_TS_FUNCTION_ARRAY(node_prev_sibling, 1),
+  ERL_TS_FUNCTION_ARRAY(node_next_named_sibling, 1),
+  ERL_TS_FUNCTION_ARRAY(node_prev_named_sibling, 1),
+  ERL_TS_FUNCTION_ARRAY(node_first_child_for_byte, 2),
+  ERL_TS_FUNCTION_ARRAY(node_first_named_child_for_byte, 2),
+  ERL_TS_FUNCTION_ARRAY(node_descendant_count, 1),
+  ERL_TS_FUNCTION_ARRAY(node_descendant_for_byte_range, 3),
+  ERL_TS_FUNCTION_ARRAY(node_descendant_for_point_range, 3),
+  ERL_TS_FUNCTION_ARRAY(node_named_descendant_for_byte_range, 3),
+  ERL_TS_FUNCTION_ARRAY(node_named_descendant_for_point_range, 3),
+  ERL_TS_FUNCTION_ARRAY(node_edit, 2),
+  ERL_TS_FUNCTION_ARRAY(node_eq, 2),
+  ERL_TS_FUNCTION_ARRAY(tree_cursor_new, 1),
+  ERL_TS_FUNCTION_ARRAY(tree_cursor_delete, 1),
+  ERL_TS_FUNCTION_ARRAY(tree_cursor_reset, 2),
+  ERL_TS_FUNCTION_ARRAY(tree_cursor_reset_to, 2),
+  ERL_TS_FUNCTION_ARRAY(tree_cursor_current_node, 1),
+  ERL_TS_FUNCTION_ARRAY(tree_cursor_current_field_name, 1),
+  ERL_TS_FUNCTION_ARRAY(tree_cursor_current_field_id, 1),
+  ERL_TS_FUNCTION_ARRAY(tree_cursor_goto_parent, 1),
+  ERL_TS_FUNCTION_ARRAY(tree_cursor_goto_next_sibling, 1),
+  ERL_TS_FUNCTION_ARRAY(tree_cursor_goto_previous_sibling, 1),
+  ERL_TS_FUNCTION_ARRAY(tree_cursor_goto_first_child, 1),
+  ERL_TS_FUNCTION_ARRAY(tree_cursor_goto_last_child, 1),
+  ERL_TS_FUNCTION_ARRAY(tree_cursor_goto_descendant, 2),
+  ERL_TS_FUNCTION_ARRAY(tree_cursor_current_descendant_index, 1),
+  ERL_TS_FUNCTION_ARRAY(tree_cursor_current_depth, 1),
+  ERL_TS_FUNCTION_ARRAY(tree_cursor_goto_first_child_for_byte, 2),
+  ERL_TS_FUNCTION_ARRAY(tree_cursor_goto_first_child_for_point, 2),
+  ERL_TS_FUNCTION_ARRAY(tree_cursor_copy, 1),
+  ERL_TS_FUNCTION_ARRAY(query_new, 2),
+  ERL_TS_FUNCTION_ARRAY(query_delete, 1),
+  ERL_TS_FUNCTION_ARRAY(query_pattern_count, 1),
+  ERL_TS_FUNCTION_ARRAY(query_capture_count, 1),
+  ERL_TS_FUNCTION_ARRAY(query_string_count, 1),
+  ERL_TS_FUNCTION_ARRAY(query_start_byte_for_pattern, 2),
+  ERL_TS_FUNCTION_ARRAY(query_end_byte_for_pattern, 2),
+  ERL_TS_FUNCTION_ARRAY(query_predicates_for_pattern, 3),
+  ERL_TS_FUNCTION_ARRAY(query_is_pattern_rooted, 2),
+  ERL_TS_FUNCTION_ARRAY(query_is_pattern_non_local, 2),
+  ERL_TS_FUNCTION_ARRAY(query_is_pattern_guaranteed_at_step, 2),
+  ERL_TS_FUNCTION_ARRAY(query_capture_name_for_id, 3),
+  ERL_TS_FUNCTION_ARRAY(query_capture_quantifier_for_id, 3),
+  ERL_TS_FUNCTION_ARRAY(query_string_value_for_id, 2),
+  ERL_TS_FUNCTION_ARRAY(query_disable_capture, 3),
+  ERL_TS_FUNCTION_ARRAY(query_disable_pattern, 2),
+  ERL_TS_FUNCTION_ARRAY(query_capture, 2),
+  ERL_TS_FUNCTION_ARRAY(query_cursor_new,0),
+  ERL_TS_FUNCTION_ARRAY(query_cursor_delete,1),
+  ERL_TS_FUNCTION_ARRAY(query_cursor_exec,3),
+  ERL_TS_FUNCTION_ARRAY(query_cursor_exec_with_options,4),
+  ERL_TS_FUNCTION_ARRAY(query_cursor_did_exceed_match_limit,1),
+  ERL_TS_FUNCTION_ARRAY(query_cursor_match_limit,1),
+  ERL_TS_FUNCTION_ARRAY(query_cursor_set_match_limit,2),
+  ERL_TS_FUNCTION_ARRAY(query_cursor_set_timeout_micros,2),
+  ERL_TS_FUNCTION_ARRAY(query_cursor_timeout_micros,1),
+  ERL_TS_FUNCTION_ARRAY(query_cursor_set_byte_range,3),
+  ERL_TS_FUNCTION_ARRAY(query_cursor_set_point_range,3),
+  ERL_TS_FUNCTION_ARRAY(query_cursor_next_match,2),
+  ERL_TS_FUNCTION_ARRAY(query_cursor_remove_match,2),
+  ERL_TS_FUNCTION_ARRAY(query_cursor_next_capture,3),
+  ERL_TS_FUNCTION_ARRAY(query_cursor_set_max_start_depth,2),
+  ERL_TS_FUNCTION_ARRAY(language_copy,1),
+  ERL_TS_FUNCTION_ARRAY(language_delete,1),
+  ERL_TS_FUNCTION_ARRAY(language_symbol_count,1),
+  ERL_TS_FUNCTION_ARRAY(language_state_count,1),
+  ERL_TS_FUNCTION_ARRAY(language_symbol_name,2),
+  ERL_TS_FUNCTION_ARRAY(language_symbol_for_name,4),
+  ERL_TS_FUNCTION_ARRAY(language_field_count,1),
+  ERL_TS_FUNCTION_ARRAY(language_field_name_for_id,2),
+  ERL_TS_FUNCTION_ARRAY(language_field_id_for_name,2),
+  ERL_TS_FUNCTION_ARRAY(language_symbol_type,2),
+  ERL_TS_FUNCTION_ARRAY(language_version,1),
+  ERL_TS_FUNCTION_ARRAY(language_next_state,3),
+  ERL_TS_FUNCTION_ARRAY(language_name,1),
+  ERL_TS_FUNCTION_ARRAY(lookahead_iterator_new,2),
+  ERL_TS_FUNCTION_ARRAY(lookahead_iterator_delete,1),
+  ERL_TS_FUNCTION_ARRAY(lookahead_iterator_reset_state,2),
+  ERL_TS_FUNCTION_ARRAY(lookahead_iterator_reset,3),
+  ERL_TS_FUNCTION_ARRAY(lookahead_iterator_language,1),
+  ERL_TS_FUNCTION_ARRAY(lookahead_iterator_next,1),
+  ERL_TS_FUNCTION_ARRAY(lookahead_iterator_current_symbol,1),
+  ERL_TS_FUNCTION_ARRAY(lookahead_iterator_current_symbol_name,1)
 };
 
 static int load(ErlNifEnv *env, void **priv_data, ERL_NIF_TERM load_info) {
