@@ -103,7 +103,7 @@
           query_is_pattern_rooted/2,
           query_is_pattern_non_local/2,
           query_is_pattern_guaranteed_at_step/2,
-          query_capture_name_for_id/3,
+          query_capture_name_for_id/2,
           query_capture_quantifier_for_id/3,
           query_string_value_for_id/2,
           query_disable_capture/3,
@@ -471,7 +471,7 @@ query_is_pattern_non_local(_, _) ->
 query_is_pattern_guaranteed_at_step(_, _) ->
   erlang:nif_error(nif_library_not_loaded).
 
-query_capture_name_for_id(_, _, _) ->
+query_capture_name_for_id(_, _) ->
   erlang:nif_error(nif_library_not_loaded).
 
 query_capture_quantifier_for_id(_, _, _) ->
@@ -486,7 +486,8 @@ query_disable_capture(_, _, _) ->
 query_disable_pattern(_, _) ->
   erlang:nif_error(nif_library_not_loaded).
 
-query_capture(_, _) ->
+-spec query_capture(TSNode :: term(), TSQuery :: term()) -> [tuple()].
+query_capture(_TSNode, _TSQuery) ->
   erlang:nif_error(nif_library_not_loaded).
 
 query_cursor_new() ->

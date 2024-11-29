@@ -745,10 +745,7 @@ ERL_TS_FUNCTION(node_type_nif) {
   TSNode node = ((struct_TSNode *)res_node)->val;
 
   const char *type = ts_node_type(node);
-  ErlNifBinary bin;
-  enif_alloc_binary(strlen(type), &bin);
-  memcpy(bin.data, type, bin.size);
-  return enif_make_binary(env, &bin);
+  return enif_make_string(env, type, ERL_NIF_LATIN1);
 }
 
 ERL_TS_FUNCTION(node_symbol_nif) {
@@ -782,10 +779,7 @@ ERL_TS_FUNCTION(node_grammar_type_nif) {
   TSNode node = ((struct_TSNode *)res_node)->val;
 
   const char *type = ts_node_grammar_type(node);
-  ErlNifBinary bin;
-  enif_alloc_binary(strlen(type), &bin);
-  memcpy(bin.data, type, bin.size);
-  return enif_make_binary(env, &bin);
+  return enif_make_string(env, type, ERL_NIF_LATIN1);
 }
 
 ERL_TS_FUNCTION(node_grammar_symbol_nif) {
@@ -840,10 +834,7 @@ ERL_TS_FUNCTION(node_string_nif) {
   TSNode node = ((struct_TSNode *)res_node)->val;
 
   char *string = ts_node_string(node);
-  ErlNifBinary bin;
-  enif_alloc_binary(strlen(string), &bin);
-  memcpy(bin.data, string, bin.size);
-  return enif_make_binary(env, &bin);
+  return enif_make_string(env, string, ERL_NIF_LATIN1);
 }
 
 ERL_TS_FUNCTION(node_is_null_nif) {
@@ -1002,10 +993,7 @@ ERL_TS_FUNCTION(node_field_name_for_child_nif) {
   RETURN_BADARG_IF(!enif_get_uint(env, argv[1], &index));
 
   const char *name = ts_node_field_name_for_child(node, index);
-  ErlNifBinary bin;
-  enif_alloc_binary(strlen(name), &bin);
-  memcpy(bin.data, name, bin.size);
-  return enif_make_binary(env, &bin);
+  return enif_make_string(env, name, ERL_NIF_LATIN1);
 }
 
 ERL_TS_FUNCTION(node_field_name_for_named_child_nif) {
@@ -1572,14 +1560,14 @@ ERL_TS_FUNCTION(query_capture_name_for_id_nif) {
   uint32_t index;
   RETURN_BADARG_IF(!enif_get_uint(env, argv[1], &index));
 
-  uint32_t length;
+  uint32_t capture_count = ts_query_capture_count(tsquery);
+  if (index >= capture_count)
+    return atom_undefined;
+
+  uint32_t length = 0;
 
   const char *result = ts_query_capture_name_for_id(tsquery, index, &length);
-  ErlNifBinary bin;
-  enif_alloc_binary(strlen(result), &bin);
-  memcpy(bin.data, result, bin.size);
-  return enif_make_tuple2(env, enif_make_binary(env, &bin),
-                          enif_make_uint(env, length));
+  return enif_make_string(env, result, ERL_NIF_LATIN1);
 }
 
 ERL_TS_FUNCTION(query_capture_quantifier_for_id_nif) {
@@ -1606,13 +1594,14 @@ ERL_TS_FUNCTION(query_string_value_for_id_nif) {
   uint32_t index;
   RETURN_BADARG_IF(!enif_get_uint(env, argv[1], &index));
 
+  uint32_t string_count = ts_query_string_count(tsquery);
+  if (index >= string_count)
+    return atom_undefined;
+
   uint32_t length;
 
   const char *result = ts_query_string_value_for_id(tsquery, index, &length);
-  ErlNifBinary bin;
-  enif_alloc_binary(strlen(result), &bin);
-  memcpy(bin.data, result, bin.size);
-  return enif_make_tuple2(env, enif_make_binary(env, &bin), enif_make_uint(env, length));
+  return enif_make_string(env, result, ERL_NIF_LATIN1);
 }
 
 ERL_TS_FUNCTION(query_disable_capture_nif) {
@@ -1836,10 +1825,7 @@ ERL_TS_FUNCTION(language_symbol_name_nif) {
   RETURN_BADARG_IF(!enif_get_uint(env, argv[1], &symbol));
 
   const char *result = ts_language_symbol_name(tslanguage, symbol);
-  ErlNifBinary bin;
-  enif_alloc_binary(strlen(result), &bin);
-  memcpy(bin.data, result, bin.size);
-  return enif_make_binary(env, &bin);
+  return enif_make_string(env, result, ERL_NIF_LATIN1);
 }
 
 ERL_TS_FUNCTION(language_symbol_for_name_nif) {
@@ -1873,11 +1859,7 @@ ERL_TS_FUNCTION(language_field_name_for_id_nif) {
   RETURN_BADARG_IF(!enif_get_uint(env, argv[1], &id));
 
   const char *result = ts_language_field_name_for_id(tslanguage, id);
-  ErlNifBinary bin;
-  enif_alloc_binary(strlen(result), &bin);
-  memcpy(bin.data, result, bin.size);
-  return enif_make_binary(env, &bin);
-  /* return enif_make_string(env, result, ERL_NIF_LATIN1); */
+  return enif_make_string(env, result, ERL_NIF_LATIN1);
 }
 
 ERL_TS_FUNCTION(language_field_id_for_name_nif) {
@@ -2100,7 +2082,7 @@ static ErlNifFunc nif_funcs[] = {
   ERL_TS_FUNCTION_ARRAY(query_is_pattern_rooted, 2),
   ERL_TS_FUNCTION_ARRAY(query_is_pattern_non_local, 2),
   ERL_TS_FUNCTION_ARRAY(query_is_pattern_guaranteed_at_step, 2),
-  ERL_TS_FUNCTION_ARRAY(query_capture_name_for_id, 3),
+  ERL_TS_FUNCTION_ARRAY(query_capture_name_for_id, 2),
   ERL_TS_FUNCTION_ARRAY(query_capture_quantifier_for_id, 3),
   ERL_TS_FUNCTION_ARRAY(query_string_value_for_id, 2),
   ERL_TS_FUNCTION_ARRAY(query_disable_capture, 3),
@@ -2162,6 +2144,8 @@ static int load(ErlNifEnv *env, void **priv_data, ERL_NIF_TERM load_info) {
   if (!res_TSLanguage)
     return -1;
   if (!res_TSTree)
+    return -1;
+  if (!res_TSQuery)
     return -1;
 
   atom_ok = mk_atom(env, "ok");
