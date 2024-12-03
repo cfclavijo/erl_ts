@@ -11,7 +11,8 @@
           parser_included_ranges/1,
           parser_parse/3,
           parser_parse_with_options/4,
-          parser_parse_string/3,
+          parser_parse_string/2,
+          parser_reparse_string/3,
           parser_parse_string_encoding/5,
           parser_reset/1,
           parser_set_timeout_micros/2,
@@ -193,7 +194,10 @@ parser_parse(_, _, _) ->
 parser_parse_with_options(_, _, _, _) ->
   erlang:nif_error(nif_library_not_loaded).
 
-parser_parse_string(_, _, _) ->
+parser_parse_string(_, _) ->
+  erlang:nif_error(nif_library_not_loaded).
+
+parser_reparse_string(_, _, _) ->
   erlang:nif_error(nif_library_not_loaded).
 
 parser_parse_string_encoding(_, _, _, _, _) ->
@@ -380,9 +384,14 @@ node_eq(_, _) ->
   erlang:nif_error(nif_library_not_loaded).
 
 node_text(Node, SourceCode) ->
-  Start = node_start_byte(Node),
-  End = node_end_byte(Node),
-  string:sub_string(SourceCode, Start + 1, End).
+  case node_is_null(Node) of
+    true ->
+      undefined;
+    false ->
+      Start = node_start_byte(Node),
+      End = node_end_byte(Node),
+      string:sub_string(SourceCode, Start + 1, End)
+  end.
 
 tree_cursor_new(_) ->
   erlang:nif_error(nif_library_not_loaded).

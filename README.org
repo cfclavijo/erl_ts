@@ -31,8 +31,8 @@ Eshell V14.2.5.4 (press Ctrl+G to abort, type help(). for help)
    {ok, Parser} = erl_ts:parser_new(),
    {ok, Lang} = erl_ts:tree_sitter_erlang(),
    true = erl_ts:parser_set_language(Parser, Lang),
-   SC = "a_qt_function({A, B}) -> {A+A, B*B}.\nb_qt_function(A, B) -> #{a => A, b => B}.",
-   Tree = erl_ts:parser_parse_string(Parser, undefined, SC),
+   SC = "a_qt_function({A,B}) -> {A+A, B*B}.    b_qt_function(A,B) -> #{a => A, b =>       B}.",
+   Tree = erl_ts:parser_parse_string(Parser, SC),
    RootNode = erl_ts:tree_root_node(Tree),
    RootNodeStr = erl_ts:node_string(RootNode).
 <<"(source_file forms_only: (fun_decl clause: (function_clause name: (atom) args: (expr_args args: (tuple expr: (var) e"...>>

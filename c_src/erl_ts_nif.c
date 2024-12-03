@@ -21,8 +21,10 @@ static ERL_NIF_TERM atom_row;
 static ERL_NIF_TERM atom_column;
 static ERL_NIF_TERM atom_start_point;
 static ERL_NIF_TERM atom_end_point;
+static ERL_NIF_TERM atom_old_end_point;
 static ERL_NIF_TERM atom_start_byte;
 static ERL_NIF_TERM atom_end_byte;
+static ERL_NIF_TERM atom_old_end_byte;
 static ERL_NIF_TERM atom_TSSymbolTypeRegular;
 static ERL_NIF_TERM atom_TSSymbolTypeAnonymus;
 static ERL_NIF_TERM atom_TSSymbolTypeSuperType;
@@ -138,6 +140,9 @@ ERL_NIF_TERM tspoint_to_map(ErlNifEnv *, TSPoint *);
 int map_to_tsrange(ErlNifEnv *, ERL_NIF_TERM, TSRange *);
 ERL_NIF_TERM tsrange_to_map(ErlNifEnv *, TSRange);
 
+int map_to_tsinput_edit(ErlNifEnv *, ERL_NIF_TERM, TSInputEdit *);
+ERL_NIF_TERM tsinput_edit_to_map(ErlNifEnv *, TSInputEdit);
+
 ERL_NIF_TERM tssymbol_type_to_atom(ErlNifEnv *, TSSymbolType);
 int atom_to_tssymbol_type(ERL_NIF_TERM, TSSymbolType *);
 ERL_NIF_TERM tsquery_error_to_atom(ErlNifEnv *, TSQueryError);
@@ -202,6 +207,39 @@ ERL_NIF_TERM tsrange_to_map(ErlNifEnv *env, TSRange tsrange) {
   enif_make_map_put(env, map, atom_start_byte, start_byte, &map);
   enif_make_map_put(env, map, atom_end_byte, end_byte, &map);
   return map;
+}
+
+int map_to_tsinput_edit(ErlNifEnv *env, ERL_NIF_TERM map, TSInputEdit *tsinput) {
+  ERL_NIF_TERM start_byte, end_byte, old_end_byte;
+  ERL_NIF_TERM start_point, end_point, old_end_point;
+  if (!enif_get_map_value(env, map, atom_start_byte, &start_byte))
+    return 0;
+  if (!enif_get_map_value(env, map, atom_end_byte, &end_byte))
+    return 0;
+  if (!enif_get_map_value(env, map, atom_old_end_byte, &old_end_byte))
+    return 0;
+
+  if (!enif_get_map_value(env, map, atom_start_point, &start_point))
+    return 0;
+  if (!enif_get_map_value(env, map, atom_end_point, &end_point))
+    return 0;
+  if (!enif_get_map_value(env, map, atom_old_end_point, &old_end_point))
+    return 0;
+
+  if (!map_to_tspoint(env, start_point, &tsinput->start_point))
+    return 0;
+  if (!map_to_tspoint(env, end_point, &tsinput->new_end_point))
+    return 0;
+  if (!map_to_tspoint(env, old_end_point, &tsinput->old_end_point))
+    return 0;
+  if (!enif_get_uint(env, start_byte, &tsinput->start_byte))
+    return 0;
+  if (!enif_get_uint(env, end_byte, &tsinput->new_end_byte))
+    return 0;
+  if (!enif_get_uint(env, old_end_byte, &tsinput->old_end_byte))
+    return 0;
+
+  return 1;
 }
 
 ERL_NIF_TERM tssymbol_type_to_atom(ErlNifEnv *env, TSSymbolType type) {
@@ -294,6 +332,7 @@ ERL_TS_FUNCTION_DECL(parser_included_ranges_nif)
 ERL_TS_FUNCTION_DECL(parser_parse_nif)
 ERL_TS_FUNCTION_DECL(parser_parse_with_options_nif)
 ERL_TS_FUNCTION_DECL(parser_parse_string_nif)
+ERL_TS_FUNCTION_DECL(parser_reparse_string_nif)
 ERL_TS_FUNCTION_DECL(parser_parse_string_encoding_nif)
 ERL_TS_FUNCTION_DECL(parser_reset_nif)
 ERL_TS_FUNCTION_DECL(parser_set_timeout_micros_nif)
@@ -540,7 +579,7 @@ ERL_TS_FUNCTION(parser_parse_with_options_nif) {
 }
 
 ERL_TS_FUNCTION(parser_parse_string_nif) {
-  /* TODO: deal with the old_tree */
+  /* deal with the old_tree using parser_reparse_string_nif/3 */
   /*   TSTree *ts_parser_parse_string( */
   /*   TSParser *self, */
   /*   const TSTree *old_tree, */
@@ -553,6 +592,40 @@ ERL_TS_FUNCTION(parser_parse_string_nif) {
 
   char *in_string;
   unsigned int in_string_length;
+  RETURN_BADARG_IF(!enif_get_list_length(env, argv[1], &in_string_length));
+  in_string = (char *)enif_alloc(in_string_length + 1);
+  if (!enif_get_string(env, argv[1], in_string, in_string_length + 1, ERL_NIF_LATIN1)) {
+    enif_free(in_string);
+    return enif_make_badarg(env);
+  }
+
+  TSTree *tree = ts_parser_parse_string(parser, NULL, in_string, in_string_length);
+  struct_TSTree *res_tree =
+    enif_alloc_resource(res_TSTree, sizeof(struct_TSTree));
+  res_tree->val = tree;
+  ERL_NIF_TERM term_tree = enif_make_resource(env, res_tree);
+  enif_release_resource(res_tree);
+  return term_tree;
+}
+
+ERL_TS_FUNCTION(parser_reparse_string_nif) {
+  /* TODO: deal with the old_tree */
+  /*   TSTree *ts_parser_parse_string( */
+  /*   TSParser *self, */
+  /*   const TSTree *old_tree, */
+  /*   const char *string, */
+  /*   uint32_t length */
+  /* ); */
+  void *res_parser;
+  RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSParser, &res_parser));
+  TSParser *parser = ((struct_TSParser *)res_parser)->val;
+
+  void *res_old_tree;
+  RETURN_BADARG_IF(!enif_get_resource(env, argv[1], res_TSTree, &res_old_tree));
+  TSTree *old_tree = ((struct_TSTree *)res_old_tree)->val;
+
+  char *in_string;
+  unsigned int in_string_length;
   RETURN_BADARG_IF(!enif_get_list_length(env, argv[2], &in_string_length));
   in_string = (char *)enif_alloc(in_string_length + 1);
   if (!enif_get_string(env, argv[2], in_string, in_string_length + 1, ERL_NIF_LATIN1)) {
@@ -560,7 +633,7 @@ ERL_TS_FUNCTION(parser_parse_string_nif) {
     return enif_make_badarg(env);
   }
 
-  TSTree *tree = ts_parser_parse_string(parser, NULL, in_string, in_string_length);
+  TSTree *tree = ts_parser_parse_string(parser, old_tree, in_string, in_string_length);
   struct_TSTree *res_tree =
     enif_alloc_resource(res_TSTree, sizeof(struct_TSTree));
   res_tree->val = tree;
@@ -713,9 +786,16 @@ ERL_TS_FUNCTION(tree_included_ranges_nif) {
 }
 
 ERL_TS_FUNCTION(tree_edit_nif) {
-  /* TODO: */
   /* void ts_tree_edit(TSTree *self, const TSInputEdit *edit); */
-  return atom_undefined;
+  void *res_tstree;
+  RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSTree, &res_tstree));
+  TSTree *tstree = ((struct_TSTree *)res_tstree)->val;
+
+  TSInputEdit edit;
+  RETURN_BADARG_IF(!map_to_tsinput_edit(env, argv[1], &edit));
+
+  ts_tree_edit(tstree, &edit);
+  return atom_ok;
 }
 
 ERL_TS_FUNCTION(tree_get_changed_ranges_nif) {
@@ -1651,9 +1731,7 @@ ERL_TS_FUNCTION(query_capture_nif) {
     }
   }
   ts_query_cursor_delete(query_cursor);
-  ERL_NIF_TERM rev_list;
-  enif_make_reverse_list(env, list, &rev_list);
-  return rev_list;
+  return list;
 }
 
 ERL_TS_FUNCTION(query_cursor_new_nif) {
@@ -1991,7 +2069,8 @@ static ErlNifFunc nif_funcs[] = {
   ERL_TS_FUNCTION_ARRAY(parser_included_ranges, 1),
   ERL_TS_FUNCTION_ARRAY(parser_parse, 3),
   ERL_TS_FUNCTION_ARRAY(parser_parse_with_options, 4),
-  ERL_TS_FUNCTION_ARRAY(parser_parse_string, 3),
+  ERL_TS_FUNCTION_ARRAY(parser_parse_string, 2),
+  ERL_TS_FUNCTION_ARRAY(parser_reparse_string, 3),
   ERL_TS_FUNCTION_ARRAY(parser_parse_string_encoding, 5),
   ERL_TS_FUNCTION_ARRAY(parser_reset, 1),
   ERL_TS_FUNCTION_ARRAY(parser_set_timeout_micros, 2),
@@ -2157,8 +2236,10 @@ static int load(ErlNifEnv *env, void **priv_data, ERL_NIF_TERM load_info) {
   atom_column = mk_atom(env, "column");
   atom_start_point = mk_atom(env, "start_point");
   atom_end_point = mk_atom(env, "end_point");
+  atom_old_end_point = mk_atom(env, "old_end_point");
   atom_start_byte = mk_atom(env, "start_byte");
   atom_end_byte = mk_atom(env, "end_byte");
+  atom_old_end_byte = mk_atom(env, "old_end_byte");
   atom_TSSymbolTypeRegular = mk_atom(env, "type_regular");
   atom_TSSymbolTypeAnonymus = mk_atom(env, "type_anonymus");
   atom_TSSymbolTypeSuperType = mk_atom(env, "type_supertype");
