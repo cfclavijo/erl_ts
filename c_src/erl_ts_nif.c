@@ -6,7 +6,6 @@
 #include <string.h>
 #include <tree_sitter/api.h>
 
-#include <erl_nif.h>
 #include "erl_ts_nif.h"
 
 /* for testing purpose  */
@@ -68,6 +67,7 @@ ErlNifResourceType *res_TSTree = NULL;
 ErlNifResourceType *res_TSQuery = NULL;
 ErlNifResourceType *res_TSNode = NULL;
 ErlNifResourceType *res_TSQueryCursor = NULL;
+ErlNifResourceType *res_TSTreeCursor = NULL;
 
 void free_TSLanguage(ErlNifEnv*, void *);
 void free_TSParser(ErlNifEnv *, void *);
@@ -75,6 +75,7 @@ void free_TSTree(ErlNifEnv *, void *);
 void free_TSQuery(ErlNifEnv *, void *);
 void free_TSNode(ErlNifEnv *, void *);
 void free_TSQueryCursor(ErlNifEnv *, void *);
+void free_TSTreeCursor(ErlNifEnv *, void *);
 
 typedef struct {
   const TSLanguage* val;
@@ -99,6 +100,10 @@ typedef struct {
 typedef struct {
   TSQueryCursor* val;
 } struct_TSQueryCursor;
+
+typedef struct {
+  TSTreeCursor val;
+} struct_TSTreeCursor;
 
 void free_TSLanguage(ErlNifEnv *env, void *object) {
   const TSLanguage* lang = ((struct_TSLanguage *)object)->val;
@@ -129,6 +134,11 @@ void free_TSNode(ErlNifEnv *env, void *object) {
 void free_TSQueryCursor(ErlNifEnv *env, void *object) {
   TSQueryCursor *qcursor = ((struct_TSQueryCursor *)object)->val;
   ts_query_cursor_delete(qcursor);
+}
+
+void free_TSTreeCursor(ErlNifEnv *env, void *object) {
+  TSTreeCursor *tcursor = &((struct_TSTreeCursor *)object)->val;
+  ts_tree_cursor_delete(tcursor);
 }
 
 
@@ -1344,9 +1354,17 @@ ERL_TS_FUNCTION(node_named_descendant_for_point_range_nif) {
 }
 
 ERL_TS_FUNCTION(node_edit_nif) {
-  /* TODO: */
+  /* Rarely recommended to be used */
   /* void ts_node_edit(TSNode *self, const TSInputEdit *edit); */
-  return atom_undefined;
+  void *res_tsnode;
+  RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
+  TSNode tsnode = ((struct_TSNode *)res_tsnode)->val;
+
+  TSInputEdit edit;
+  RETURN_BADARG_IF(!map_to_tsinput_edit(env, argv[1], &edit));
+
+  ts_node_edit(&tsnode, &edit);
+  return atom_ok;
 }
 
 ERL_TS_FUNCTION(node_eq_nif) {
@@ -1368,9 +1386,18 @@ ERL_TS_FUNCTION(node_eq_nif) {
 /************************/
 
 ERL_TS_FUNCTION(tree_cursor_new_nif) {
-  /* TODO: */
   /* TSTreeCursor ts_tree_cursor_new(TSNode node); */
-  return atom_undefined;
+  void *res_node;
+  RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_node));
+  TSNode node = ((struct_TSNode *)res_node)->val;
+
+  TSTreeCursor result = ts_tree_cursor_new(node);
+  struct_TSTreeCursor *res_result =
+    enif_alloc_resource(res_TSTreeCursor, sizeof(struct_TSTreeCursor));
+  res_result->val = result;
+  ERL_NIF_TERM term_result = enif_make_resource(env, res_result);
+  enif_release_resource(res_result);
+  return term_result;
 }
 
 ERL_TS_FUNCTION(tree_cursor_delete_nif) {
@@ -1392,27 +1419,50 @@ ERL_TS_FUNCTION(tree_cursor_reset_to_nif) {
 }
 
 ERL_TS_FUNCTION(tree_cursor_current_node_nif) {
-  /* TODO: */
   /* TSNode ts_tree_cursor_current_node(const TSTreeCursor *self); */
-  return atom_undefined;
+  void *res_tstreecursor;
+  RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSTreeCursor, &res_tstreecursor));
+  TSTreeCursor tstreecursor = ((struct_TSTreeCursor *)res_tstreecursor)->val;
+
+  TSNode result = ts_tree_cursor_current_node(&tstreecursor);
+  struct_TSNode *res_result = enif_alloc_resource(res_TSNode, sizeof(struct_TSNode));
+  res_result->val = result;
+  ERL_NIF_TERM term_result = enif_make_resource(env, res_result);
+  enif_release_resource(res_result);
+  return term_result;
 }
 
 ERL_TS_FUNCTION(tree_cursor_current_field_name_nif) {
   /* TODO: */
   /* const char *ts_tree_cursor_current_field_name(const TSTreeCursor *self); */
-  return atom_undefined;
+  void *res_tstreecursor;
+  RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSTreeCursor, &res_tstreecursor));
+  TSTreeCursor tstreecursor = ((struct_TSTreeCursor *)res_tstreecursor)->val;
+
+  const char *result = ts_tree_cursor_current_field_name(&tstreecursor);
+  return enif_make_string(env, result, ERL_NIF_LATIN1);
 }
 
 ERL_TS_FUNCTION(tree_cursor_current_field_id_nif) {
   /* TODO: */
   /* TSFieldId ts_tree_cursor_current_field_id(const TSTreeCursor *self); */
-  return atom_undefined;
+  void *res_tstreecursor;
+  RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSTreeCursor, &res_tstreecursor));
+  TSTreeCursor tstreecursor = ((struct_TSTreeCursor *)res_tstreecursor)->val;
+
+  uint16_t result = ts_tree_cursor_current_field_id(&tstreecursor);
+  return enif_make_uint(env, result);
 }
 
 ERL_TS_FUNCTION(tree_cursor_goto_parent_nif) {
   /* TODO: */
   /* bool ts_tree_cursor_goto_parent(TSTreeCursor *self); */
-  return atom_undefined;
+  void *res_tstreecursor;
+  RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSTreeCursor, &res_tstreecursor));
+  TSTreeCursor tstreecursor = ((struct_TSTreeCursor *)res_tstreecursor)->val;
+
+  bool result = ts_tree_cursor_goto_parent(&tstreecursor);
+  return result? atom_true : atom_false;
 }
 
 ERL_TS_FUNCTION(tree_cursor_goto_next_sibling_nif) {
@@ -2218,6 +2268,8 @@ static int load(ErlNifEnv *env, void **priv_data, ERL_NIF_TERM load_info) {
                                        ERL_NIF_RT_CREATE, NULL);
   res_TSQueryCursor = enif_open_resource_type(env, NULL, "TSQueryCursor", free_TSQueryCursor,
                                        ERL_NIF_RT_CREATE, NULL);
+  res_TSTreeCursor = enif_open_resource_type(env, NULL, "TSTreeCursor", free_TSTreeCursor,
+                                       ERL_NIF_RT_CREATE, NULL);
   if (!res_TSParser)
     return -1;
   if (!res_TSLanguage)
@@ -2225,6 +2277,10 @@ static int load(ErlNifEnv *env, void **priv_data, ERL_NIF_TERM load_info) {
   if (!res_TSTree)
     return -1;
   if (!res_TSQuery)
+    return -1;
+  if (!res_TSQueryCursor)
+    return -1;
+  if (!res_TSTreeCursor)
     return -1;
 
   atom_ok = mk_atom(env, "ok");
@@ -2250,8 +2306,17 @@ static int load(ErlNifEnv *env, void **priv_data, ERL_NIF_TERM load_info) {
   atom_TSQueryErrorField     = mk_atom(env, "error_field");
   atom_TSQueryErrorCapture   = mk_atom(env, "error_capture");
   atom_TSQueryErrorStructure = mk_atom(env, "error_structure");
-  atom_TSQueryErrorLanguage  = mk_atom(env, "error_language");
+  atom_TSQueryErrorLanguage = mk_atom(env, "error_language");
+
   return 0;
 }
 
-ERL_NIF_INIT(erl_ts, nif_funcs, load, NULL, NULL, NULL)
+static int upgrade(ErlNifEnv *env, void **priv_data, void **old_priv_data,
+            ERL_NIF_TERM load_info) {
+  return 0;
+}
+
+static void unload(ErlNifEnv *env, void *priv_data) {
+}
+
+ERL_NIF_INIT(erl_ts, nif_funcs, load, NULL, upgrade, unload)

@@ -152,6 +152,8 @@
 -define(APPNAME, erl_ts).
 -define(LIBNAME, erl_ts).
 
+-on_load(init/0).
+
 init() ->
   ErlTsLib =
     case code:priv_dir(?APPNAME) of
