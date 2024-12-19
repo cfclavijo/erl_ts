@@ -7,6 +7,7 @@
 #include <tree_sitter/api.h>
 
 #include "erl_ts_nif.h"
+#include "erl_nif.h"
 
 /* for testing purpose  */
 const TSLanguage *tree_sitter_erlang(void);
@@ -94,7 +95,7 @@ typedef struct {
 } struct_TSQuery;
 
 typedef struct {
-  TSNode val;
+  TSNode* val;
 } struct_TSNode;
 
 typedef struct {
@@ -127,8 +128,8 @@ void free_TSQuery(ErlNifEnv *env, void *object) {
 
 void free_TSNode(ErlNifEnv *env, void *object) {
   /* TSNode is no longer a pointer, no free required */
-  /* TSNode *node = ((struct_TSNode *)object)->val; */
-  /* enif_free(node); */
+  TSNode *node = ((struct_TSNode *)object)->val;
+  enif_free(node);
 }
 
 void free_TSQueryCursor(ErlNifEnv *env, void *object) {
@@ -146,7 +147,7 @@ void free_TSTreeCursor(ErlNifEnv *env, void *object) {
 /* Struct utils definition */
 /********************************************************************/
 int map_to_tspoint(ErlNifEnv *, ERL_NIF_TERM, TSPoint *);
-ERL_NIF_TERM tspoint_to_map(ErlNifEnv *, TSPoint *);
+ERL_NIF_TERM tspoint_to_map(ErlNifEnv *, const TSPoint);
 int map_to_tsrange(ErlNifEnv *, ERL_NIF_TERM, TSRange *);
 ERL_NIF_TERM tsrange_to_map(ErlNifEnv *, TSRange);
 
@@ -173,11 +174,10 @@ int map_to_tspoint(ErlNifEnv *env, ERL_NIF_TERM map, TSPoint* tspoint) {
   return 1;
 }
 
-ERL_NIF_TERM tspoint_to_map(ErlNifEnv *env, TSPoint *tspoint) {
-  ERL_NIF_TERM map;
-  map = enif_make_new_map(env);
-  enif_make_map_put(env, map, atom_row, enif_make_uint(env, tspoint->row), &map);
-  enif_make_map_put(env, map, atom_column, enif_make_uint(env, tspoint->column), &map);
+ERL_NIF_TERM tspoint_to_map(ErlNifEnv *env, const TSPoint tspoint) {
+  ERL_NIF_TERM map = enif_make_new_map(env);
+  enif_make_map_put(env, map, atom_row, enif_make_int(env, tspoint.row), &map);
+  enif_make_map_put(env, map, atom_column, enif_make_int(env, tspoint.column), &map);
 
   return map;
 }
@@ -208,8 +208,8 @@ int map_to_tsrange(ErlNifEnv *env, ERL_NIF_TERM map, TSRange *tsrange) {
 ERL_NIF_TERM tsrange_to_map(ErlNifEnv *env, TSRange tsrange) {
   ERL_NIF_TERM map = enif_make_new_map(env);
   ERL_NIF_TERM start_point, end_point, start_byte, end_byte;
-  start_point = tspoint_to_map(env, &tsrange.start_point);
-  end_point = tspoint_to_map(env, &tsrange.end_point);
+  start_point = tspoint_to_map(env, tsrange.start_point);
+  end_point = tspoint_to_map(env, tsrange.end_point);
   start_byte = enif_make_uint(env, tsrange.start_byte);
   end_byte = enif_make_uint(env, tsrange.end_byte);
   enif_make_map_put(env, map, atom_start_point, start_point, &map);
@@ -507,7 +507,7 @@ ERL_TS_FUNCTION(parser_delete_nif) {
 }
 
 ERL_TS_FUNCTION(parser_language_nif) {
-  void* res_parser;
+  void* res_parser = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSParser, &res_parser));
   TSParser* parser = ((struct_TSParser*)res_parser)->val;
   const TSLanguage *language = ts_parser_language(parser);
@@ -522,8 +522,8 @@ ERL_TS_FUNCTION(parser_language_nif) {
 }
 
 ERL_TS_FUNCTION(parser_set_language_nif) {
-  void *res_parser;
-  void *res_language;
+  void *res_parser = NULL;
+  void *res_language = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSParser, &res_parser));
   RETURN_BADARG_IF(!enif_get_resource(env, argv[1], res_TSLanguage, &res_language));
 
@@ -548,7 +548,7 @@ ERL_TS_FUNCTION(parser_included_ranges_nif) {
   /*   const TSParser *self, */
   /*   uint32_t *count */
   /* ); */
-  void *res_tsparser;
+  void *res_tsparser = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSParser, &res_tsparser));
   TSParser *tsparser = ((struct_TSParser *)res_tsparser)->val;
 
@@ -596,11 +596,11 @@ ERL_TS_FUNCTION(parser_parse_string_nif) {
   /*   const char *string, */
   /*   uint32_t length */
   /* ); */
-  void *res_parser;
+  void *res_parser = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSParser, &res_parser));
   TSParser *parser = ((struct_TSParser *)res_parser)->val;
 
-  char *in_string;
+  char *in_string = NULL;
   unsigned int in_string_length;
   RETURN_BADARG_IF(!enif_get_list_length(env, argv[1], &in_string_length));
   in_string = (char *)enif_alloc(in_string_length + 1);
@@ -626,15 +626,15 @@ ERL_TS_FUNCTION(parser_reparse_string_nif) {
   /*   const char *string, */
   /*   uint32_t length */
   /* ); */
-  void *res_parser;
+  void *res_parser = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSParser, &res_parser));
   TSParser *parser = ((struct_TSParser *)res_parser)->val;
 
-  void *res_old_tree;
+  void *res_old_tree = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[1], res_TSTree, &res_old_tree));
   TSTree *old_tree = ((struct_TSTree *)res_old_tree)->val;
 
-  char *in_string;
+  char *in_string = NULL;
   unsigned int in_string_length;
   RETURN_BADARG_IF(!enif_get_list_length(env, argv[2], &in_string_length));
   in_string = (char *)enif_alloc(in_string_length + 1);
@@ -666,7 +666,7 @@ ERL_TS_FUNCTION(parser_parse_string_encoding_nif) {
 
 ERL_TS_FUNCTION(parser_reset_nif) {
   /* void ts_parser_reset(TSParser *self); */
-  void *res_tsparser;
+  void *res_tsparser = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSParser, &res_tsparser));
   TSParser *tsparser = ((struct_TSParser *)res_tsparser)->val;
 
@@ -676,7 +676,7 @@ ERL_TS_FUNCTION(parser_reset_nif) {
 
 ERL_TS_FUNCTION(parser_set_timeout_micros_nif) {
   /* void ts_parser_set_timeout_micros(TSParser *self, uint64_t timeout_micros); */
-  void *res_tsparser;
+  void *res_tsparser = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSParser, &res_tsparser));
   TSParser *tsparser = ((struct_TSParser *)res_tsparser)->val;
 
@@ -689,7 +689,7 @@ ERL_TS_FUNCTION(parser_set_timeout_micros_nif) {
 
 ERL_TS_FUNCTION(parser_timeout_micros_nif) {
   /* uint64_t ts_parser_timeout_micros(const TSParser *self); */
-  void *res_tsparser;
+  void *res_tsparser = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSParser, &res_tsparser));
   TSParser *tsparser = ((struct_TSParser *)res_tsparser)->val;
 
@@ -733,7 +733,7 @@ ERL_TS_FUNCTION(parser_print_dot_graphs_nif) {
 
 ERL_TS_FUNCTION(tree_copy_nif) {
   /* TSTree *ts_tree_copy(const TSTree *self); */
-  void *res_tstree;
+  void *res_tstree = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSTree, &res_tstree));
   const TSTree *tstree = ((struct_TSTree *)res_tstree)->val;
 
@@ -753,10 +753,12 @@ ERL_TS_FUNCTION(tree_delete_nif) {
 
 ERL_TS_FUNCTION(tree_root_node_nif) {
   /* TSNode ts_tree_root_node(const TSTree *self); */
-  void *res_tree;
+  void *res_tree = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSTree, &res_tree));
   TSTree *tree = ((struct_TSTree *)res_tree)->val;
-  TSNode node = ts_tree_root_node(tree);
+  TSNode *node = enif_alloc(sizeof(TSNode));
+  /* TSNode node = ts_tree_root_node(tree); */
+  *node = ts_tree_root_node(tree);
   struct_TSNode *res_node =
     enif_alloc_resource(res_TSNode, sizeof(struct_TSNode));
   res_node->val = node;
@@ -777,7 +779,7 @@ ERL_TS_FUNCTION(tree_root_node_with_offset_nif) {
 
 ERL_TS_FUNCTION(tree_language_nif) {
   /* const TSLanguage *ts_tree_language(const TSTree *self); */
-  void *res_tstree;
+  void *res_tstree = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSTree, &res_tstree));
   const TSTree *tstree = ((struct_TSTree *)res_tstree)->val;
 
@@ -797,7 +799,7 @@ ERL_TS_FUNCTION(tree_included_ranges_nif) {
 
 ERL_TS_FUNCTION(tree_edit_nif) {
   /* void ts_tree_edit(TSTree *self, const TSInputEdit *edit); */
-  void *res_tstree;
+  void *res_tstree = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSTree, &res_tstree));
   TSTree *tstree = ((struct_TSTree *)res_tstree)->val;
 
@@ -830,9 +832,9 @@ ERL_TS_FUNCTION(tree_print_dot_graph_nif) {
 
 ERL_TS_FUNCTION(node_type_nif) {
   /* const char *ts_node_type(TSNode self); */
-  void *res_node;
+  void *res_node = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_node));
-  TSNode node = ((struct_TSNode *)res_node)->val;
+  TSNode node = *((struct_TSNode *)res_node)->val;
 
   const char *type = ts_node_type(node);
   return enif_make_string(env, type, ERL_NIF_LATIN1);
@@ -840,9 +842,9 @@ ERL_TS_FUNCTION(node_type_nif) {
 
 ERL_TS_FUNCTION(node_symbol_nif) {
   /* TSSymbol ts_node_symbol(TSNode self); */
-  void *res_tsnode;
+  void *res_tsnode = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
-  TSNode tsnode = ((struct_TSNode *)res_tsnode)->val;
+  TSNode tsnode = *((struct_TSNode *)res_tsnode)->val;
 
   TSSymbol symbol = ts_node_symbol(tsnode);
   return enif_make_uint(env, symbol);
@@ -850,9 +852,9 @@ ERL_TS_FUNCTION(node_symbol_nif) {
 
 ERL_TS_FUNCTION(node_language_nif) {
   /* const TSLanguage *ts_node_language(TSNode self); */
-  void *res_tsnode;
+  void *res_tsnode = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
-  TSNode tsnode = ((struct_TSNode *)res_tsnode)->val;
+  TSNode tsnode = *((struct_TSNode *)res_tsnode)->val;
 
   const TSLanguage *result = ts_node_language(tsnode);
   struct_TSLanguage *res_result = enif_alloc_resource(res_TSLanguage, sizeof(struct_TSLanguage));
@@ -864,9 +866,9 @@ ERL_TS_FUNCTION(node_language_nif) {
 
 ERL_TS_FUNCTION(node_grammar_type_nif) {
   /* const char *ts_node_grammar_type(TSNode self); */
-  void *res_node;
+  void *res_node = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_node));
-  TSNode node = ((struct_TSNode *)res_node)->val;
+  TSNode node = *((struct_TSNode *)res_node)->val;
 
   const char *type = ts_node_grammar_type(node);
   return enif_make_string(env, type, ERL_NIF_LATIN1);
@@ -880,9 +882,9 @@ ERL_TS_FUNCTION(node_grammar_symbol_nif) {
 
 ERL_TS_FUNCTION(node_start_byte_nif) {
   /* uint32_t ts_node_start_byte(TSNode self); */
-  void *res_tsnode;
+  void *res_tsnode = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
-  TSNode tsnode = ((struct_TSNode *)res_tsnode)->val;
+  TSNode tsnode = *((struct_TSNode *)res_tsnode)->val;
 
   uint32_t result = ts_node_start_byte(tsnode);
   return enif_make_uint(env, result);
@@ -890,38 +892,38 @@ ERL_TS_FUNCTION(node_start_byte_nif) {
 
 ERL_TS_FUNCTION(node_start_point_nif) {
   /* TSPoint ts_node_start_point(TSNode self); */
-  void *res_tsnode;
+  void *res_tsnode = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
-  TSNode tsnode = ((struct_TSNode *)res_tsnode)->val;
+  TSNode *tsnode = ((struct_TSNode *)res_tsnode)->val;
 
-  TSPoint result = ts_node_start_point(tsnode);
-  return tspoint_to_map(env, &result);
+  TSPoint result = ts_node_start_point(*tsnode);
+  return tspoint_to_map(env, result);
 }
 
 ERL_TS_FUNCTION(node_end_byte_nif) {
   /* uint32_t ts_node_end_byte(TSNode self); */
-  void *res_tsnode;
+  void *res_tsnode = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
-  TSNode tsnode = ((struct_TSNode *)res_tsnode)->val;
+  TSNode *tsnode = ((struct_TSNode *)res_tsnode)->val;
 
-  uint32_t result = ts_node_end_byte(tsnode);
+  uint32_t result = ts_node_end_byte(*tsnode);
   return enif_make_uint(env, result);
 }
 
 ERL_TS_FUNCTION(node_end_point_nif) {
   /* TSPoint ts_node_end_point(TSNode self); */
-  void *res_tsnode;
+  void *res_tsnode = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
-  TSNode tsnode = ((struct_TSNode *)res_tsnode)->val;
+  TSNode *tsnode = ((struct_TSNode *)res_tsnode)->val;
 
-  TSPoint result = ts_node_end_point(tsnode);
-  return tspoint_to_map(env, &result);
+  TSPoint result = ts_node_end_point(*tsnode);
+  return tspoint_to_map(env, result);
 }
 
 ERL_TS_FUNCTION(node_string_nif) {
   void *res_node;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_node));
-  TSNode node = ((struct_TSNode *)res_node)->val;
+  TSNode node = *((struct_TSNode *)res_node)->val;
 
   char *string = ts_node_string(node);
   return enif_make_string(env, string, ERL_NIF_LATIN1);
@@ -929,11 +931,11 @@ ERL_TS_FUNCTION(node_string_nif) {
 
 ERL_TS_FUNCTION(node_is_null_nif) {
   /* bool ts_node_is_null(TSNode self); */
-  void *res_node;
+  void *res_node = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_node));
-  TSNode node = ((struct_TSNode *)res_node)->val;
+  TSNode *node = ((struct_TSNode *)res_node)->val;
 
-  bool is_null = ts_node_is_null(node);
+  bool is_null = ts_node_is_null(*node);
   return is_null ? atom_true : atom_false;
 }
 
@@ -941,7 +943,7 @@ ERL_TS_FUNCTION(node_is_named_nif) {
   /* bool ts_node_is_named(TSNode self); */
   void *res_node;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_node));
-  TSNode node = ((struct_TSNode *)res_node)->val;
+  TSNode node = *((struct_TSNode *)res_node)->val;
 
   bool is_null = ts_node_is_named(node);
   return is_null ? atom_true : atom_false;
@@ -951,7 +953,7 @@ ERL_TS_FUNCTION(node_is_missing_nif) {
   /* bool ts_node_is_missing(TSNode self); */
   void *res_node;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_node));
-  TSNode node = ((struct_TSNode *)res_node)->val;
+  TSNode node = *((struct_TSNode *)res_node)->val;
 
   bool is_null = ts_node_is_missing(node);
   return is_null ? atom_true : atom_false;
@@ -961,7 +963,7 @@ ERL_TS_FUNCTION(node_is_extra_nif) {
   /* bool ts_node_is_extra(TSNode self); */
   void *res_node;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_node));
-  TSNode node = ((struct_TSNode *)res_node)->val;
+  TSNode node = *((struct_TSNode *)res_node)->val;
 
   bool is_null = ts_node_is_extra(node);
   return is_null ? atom_true : atom_false;
@@ -971,7 +973,7 @@ ERL_TS_FUNCTION(node_has_changes_nif) {
   /* bool ts_node_has_changes(TSNode self); */
   void *res_node;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_node));
-  TSNode node = ((struct_TSNode *)res_node)->val;
+  TSNode node = *((struct_TSNode *)res_node)->val;
 
   bool is_null = ts_node_has_changes(node);
   return is_null ? atom_true : atom_false;
@@ -981,7 +983,7 @@ ERL_TS_FUNCTION(node_has_error_nif) {
   /* bool ts_node_has_error(TSNode self); */
   void *res_node;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_node));
-  TSNode node = ((struct_TSNode *)res_node)->val;
+  TSNode node = *((struct_TSNode *)res_node)->val;
 
   bool is_null = ts_node_has_error(node);
   return is_null ? atom_true : atom_false;
@@ -991,7 +993,7 @@ ERL_TS_FUNCTION(node_is_error_nif) {
   /* bool ts_node_is_error(TSNode self); */
   void *res_node;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_node));
-  TSNode node = ((struct_TSNode *)res_node)->val;
+  TSNode node = *((struct_TSNode *)res_node)->val;
 
   bool is_null = ts_node_is_error(node);
   return is_null ? atom_true : atom_false;
@@ -1001,7 +1003,7 @@ ERL_TS_FUNCTION(node_parse_state_nif) {
   /* TSStateId ts_node_parse_state(TSNode self); */
   void *res_tsnode;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
-  TSNode tsnode = ((struct_TSNode *)res_tsnode)->val;
+  TSNode tsnode = *((struct_TSNode *)res_tsnode)->val;
 
   TSStateId result = ts_node_parse_state(tsnode);
   return enif_make_uint(env, result);
@@ -1011,7 +1013,7 @@ ERL_TS_FUNCTION(node_next_parse_state_nif) {
   /* TSStateId ts_node_next_parse_state(TSNode self); */
   void *res_tsnode;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
-  TSNode tsnode = ((struct_TSNode *)res_tsnode)->val;
+  TSNode tsnode = *((struct_TSNode *)res_tsnode)->val;
 
   TSStateId result = ts_node_next_parse_state(tsnode);
   return enif_make_uint(env, result);
@@ -1021,9 +1023,11 @@ ERL_TS_FUNCTION(node_parent_nif) {
   /* TSNode ts_node_parent(TSNode self); */
   void *res_tsnode;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
-  TSNode tsnode = ((struct_TSNode *)res_tsnode)->val;
+  TSNode tsnode = *((struct_TSNode *)res_tsnode)->val;
 
-  TSNode result = ts_node_parent(tsnode);
+  TSNode *result = enif_alloc(sizeof(TSNode));
+  /* TSNode result = ts_node_parent(tsnode); */
+  *result = ts_node_parent(tsnode);
   struct_TSNode *res_result = enif_alloc_resource(res_TSNode, sizeof(struct_TSNode));
   res_result->val = result;
   ERL_NIF_TERM term_result = enif_make_resource(env, res_result);
@@ -1033,15 +1037,17 @@ ERL_TS_FUNCTION(node_parent_nif) {
 
 ERL_TS_FUNCTION(node_child_containing_descendant_nif) {
   /* TSNode ts_node_child_containing_descendant(TSNode self, TSNode descendant); */
-  void *res_tsnode;
+  void *res_tsnode = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
-  TSNode tsnode = ((struct_TSNode *)res_tsnode)->val;
+  TSNode tsnode = *((struct_TSNode *)res_tsnode)->val;
 
-  void *res_descendant;
+  void *res_descendant = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[1], res_TSNode, &res_descendant));
-  TSNode descendant = ((struct_TSNode *)res_descendant)->val;
+  TSNode descendant = *((struct_TSNode *)res_descendant)->val;
 
-  TSNode result = ts_node_child_containing_descendant(tsnode, descendant);
+  TSNode *result = enif_alloc(sizeof(TSNode));
+  /* TSNode result = ts_node_child_containing_descendant(tsnode, descendant); */
+  *result = ts_node_child_containing_descendant(tsnode, descendant);
   struct_TSNode *res_result = enif_alloc_resource(res_TSNode, sizeof(struct_TSNode));
   res_result->val = result;
   ERL_NIF_TERM term_result = enif_make_resource(env, res_result);
@@ -1057,14 +1063,18 @@ ERL_TS_FUNCTION(node_child_with_descendant_nif) {
 
 ERL_TS_FUNCTION(node_child_nif) {
   /* TSNode ts_node_child(TSNode self, uint32_t child_index); */
-  void *res_tsnode;
+  RETURN_BADARG_IF(argc != 2);
+
+  void *res_tsnode = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
-  TSNode tsnode = ((struct_TSNode *)res_tsnode)->val;
+  TSNode *tsnode = ((struct_TSNode *)res_tsnode)->val;
 
   uint32_t child_index;
   RETURN_BADARG_IF(!enif_get_uint(env, argv[1], &child_index));
 
-  TSNode result = ts_node_child(tsnode, child_index);
+  TSNode *result = enif_alloc(sizeof(TSNode));
+  /* TSNode result = ts_node_child(tsnode, child_index); */
+  *result = ts_node_child(*tsnode, child_index);
   struct_TSNode *res_result = enif_alloc_resource(res_TSNode, sizeof(struct_TSNode));
   res_result->val = result;
   ERL_NIF_TERM term_result = enif_make_resource(env, res_result);
@@ -1075,9 +1085,9 @@ ERL_TS_FUNCTION(node_child_nif) {
 ERL_TS_FUNCTION(node_field_name_for_child_nif) {
   /* const char *ts_node_field_name_for_child(TSNode self, uint32_t
    * child_index); */
-  void *res_node;
+  void *res_node = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_node));
-  TSNode node = ((struct_TSNode *)res_node)->val;
+  TSNode node = *((struct_TSNode *)res_node)->val;
 
   uint32_t index = 0;
   RETURN_BADARG_IF(!enif_get_uint(env, argv[1], &index));
@@ -1095,25 +1105,27 @@ ERL_TS_FUNCTION(node_field_name_for_named_child_nif) {
 
 ERL_TS_FUNCTION(node_child_count_nif) {
   /* uint32_t ts_node_child_count(TSNode self); */
-  void *res_node;
+  void *res_node = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_node));
-  TSNode node = ((struct_TSNode *)res_node)->val;
+  TSNode *node = ((struct_TSNode *)res_node)->val;
 
-  uint32_t count = ts_node_child_count(node);
+  uint32_t count = ts_node_child_count(*node);
   ERL_NIF_TERM term_count = enif_make_uint(env, count);
   return term_count;
 }
 
 ERL_TS_FUNCTION(node_named_child_nif) {
   /* TSNode ts_node_named_child(TSNode self, uint32_t child_index); */
-  void *res_node;
+  void *res_node = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_node));
-  TSNode node = ((struct_TSNode *)res_node)->val;
+  TSNode node = *((struct_TSNode *)res_node)->val;
 
   uint32_t index = 0;
   RETURN_BADARG_IF(!enif_get_uint(env, argv[1], &index));
 
-  TSNode child = ts_node_named_child(node, index);
+  TSNode *child = enif_alloc(sizeof(TSNode));
+  /* TSNode child = ts_node_named_child(node, index); */
+  *child = ts_node_named_child(node, index);
   struct_TSNode *res_child =
     enif_alloc_resource(res_TSNode, sizeof(struct_TSNode));
   res_child->val = child;
@@ -1124,9 +1136,9 @@ ERL_TS_FUNCTION(node_named_child_nif) {
 
 ERL_TS_FUNCTION(node_named_child_count_nif) {
   /* uint32_t ts_node_named_child_count(TSNode self); */
-  void *res_node;
+  void *res_node = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_node));
-  TSNode node = ((struct_TSNode *)res_node)->val;
+  TSNode node = *((struct_TSNode *)res_node)->val;
 
   uint32_t count = ts_node_named_child_count(node);
   ERL_NIF_TERM term_count = enif_make_uint(env, count);
@@ -1139,9 +1151,9 @@ ERL_TS_FUNCTION(node_child_by_field_name_nif) {
   /*   const char *name, */
   /*   uint32_t name_length */
   /* ); */
-  void *res_tsnode;
+  void *res_tsnode = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
-  TSNode tsnode = ((struct_TSNode *)res_tsnode)->val;
+  TSNode tsnode = *((struct_TSNode *)res_tsnode)->val;
 
   char *name = NULL;
   unsigned int name_length;
@@ -1152,7 +1164,9 @@ ERL_TS_FUNCTION(node_child_by_field_name_nif) {
     return enif_make_badarg(env);
   }
 
-  TSNode result = ts_node_child_by_field_name(tsnode, name, name_length);
+  TSNode *result = enif_alloc(sizeof(TSNode));
+  /* TSNode result = ts_node_child_by_field_name(tsnode, name, name_length); */
+  *result = ts_node_child_by_field_name(tsnode, name, name_length);
   struct_TSNode *res_result = enif_alloc_resource(res_TSNode, sizeof(struct_TSNode));
   res_result->val = result;
   ERL_NIF_TERM term_result = enif_make_resource(env, res_result);
@@ -1162,14 +1176,16 @@ ERL_TS_FUNCTION(node_child_by_field_name_nif) {
 
 ERL_TS_FUNCTION(node_child_by_field_id_nif) {
   /* TSNode ts_node_child_by_field_id(TSNode self, TSFieldId field_id); */
-  void *res_tsnode;
+  void *res_tsnode = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
-  TSNode tsnode = ((struct_TSNode *)res_tsnode)->val;
+  TSNode tsnode = *((struct_TSNode *)res_tsnode)->val;
 
   unsigned int field_id;
   RETURN_BADARG_IF(!enif_get_uint(env, argv[1], &field_id));
 
-  TSNode result = ts_node_child_by_field_id(tsnode, field_id);
+  TSNode *result = enif_alloc(sizeof(TSNode));
+  /* TSNode result = ts_node_child_by_field_id(tsnode, field_id); */
+  *result = ts_node_child_by_field_id(tsnode, field_id);
   struct_TSNode *res_result = enif_alloc_resource(res_TSNode, sizeof(struct_TSNode));
   res_result->val = result;
   ERL_NIF_TERM term_result = enif_make_resource(env, res_result);
@@ -1179,11 +1195,13 @@ ERL_TS_FUNCTION(node_child_by_field_id_nif) {
 
 ERL_TS_FUNCTION(node_next_sibling_nif) {
   /* TSNode ts_node_next_sibling(TSNode self); */
-  void *res_tsnode;
+  void *res_tsnode = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
-  TSNode tsnode = ((struct_TSNode *)res_tsnode)->val;
+  TSNode tsnode = *((struct_TSNode *)res_tsnode)->val;
 
-  TSNode result = ts_node_next_sibling(tsnode);
+  TSNode *result = enif_alloc(sizeof(TSNode));
+  /* TSNode result = ts_node_next_sibling(tsnode); */
+  *result = ts_node_next_sibling(tsnode);
   struct_TSNode *res_result = enif_alloc_resource(res_TSNode, sizeof(struct_TSNode));
   res_result->val = result;
   ERL_NIF_TERM term_result = enif_make_resource(env, res_result);
@@ -1193,11 +1211,13 @@ ERL_TS_FUNCTION(node_next_sibling_nif) {
 
 ERL_TS_FUNCTION(node_prev_sibling_nif) {
   /* TSNode ts_node_prev_sibling(TSNode self); */
-  void *res_tsnode;
+  void *res_tsnode = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
-  TSNode tsnode = ((struct_TSNode *)res_tsnode)->val;
+  TSNode tsnode = *((struct_TSNode *)res_tsnode)->val;
 
-  TSNode result = ts_node_prev_sibling(tsnode);
+  TSNode *result = enif_alloc(sizeof(TSNode));
+  /* TSNode result = ts_node_prev_sibling(tsnode); */
+  *result = ts_node_prev_sibling(tsnode);
   struct_TSNode *res_result = enif_alloc_resource(res_TSNode, sizeof(struct_TSNode));
   res_result->val = result;
   ERL_NIF_TERM term_result = enif_make_resource(env, res_result);
@@ -1207,11 +1227,13 @@ ERL_TS_FUNCTION(node_prev_sibling_nif) {
 
 ERL_TS_FUNCTION(node_next_named_sibling_nif) {
   /* TSNode ts_node_next_named_sibling(TSNode self); */
-  void *res_tsnode;
+  void *res_tsnode = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
-  TSNode tsnode = ((struct_TSNode *)res_tsnode)->val;
+  TSNode tsnode = *((struct_TSNode *)res_tsnode)->val;
 
-  TSNode result = ts_node_next_named_sibling(tsnode);
+  TSNode *result = enif_alloc(sizeof(TSNode));
+  /* TSNode result = ts_node_next_named_sibling(tsnode); */
+  *result = ts_node_next_named_sibling(tsnode);
   struct_TSNode *res_result = enif_alloc_resource(res_TSNode, sizeof(struct_TSNode));
   res_result->val = result;
   ERL_NIF_TERM term_result = enif_make_resource(env, res_result);
@@ -1221,11 +1243,13 @@ ERL_TS_FUNCTION(node_next_named_sibling_nif) {
 
 ERL_TS_FUNCTION(node_prev_named_sibling_nif) {
   /* TSNode ts_node_prev_named_sibling(TSNode self); */
-  void *res_tsnode;
+  void *res_tsnode = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
-  TSNode tsnode = ((struct_TSNode *)res_tsnode)->val;
+  TSNode tsnode = *((struct_TSNode *)res_tsnode)->val;
 
-  TSNode result = ts_node_prev_named_sibling(tsnode);
+  TSNode *result = enif_alloc(sizeof(TSNode));
+  /* TSNode result = ts_node_prev_named_sibling(tsnode); */
+  *result = ts_node_prev_named_sibling(tsnode);
   struct_TSNode *res_result = enif_alloc_resource(res_TSNode, sizeof(struct_TSNode));
   res_result->val = result;
   ERL_NIF_TERM term_result = enif_make_resource(env, res_result);
@@ -1235,14 +1259,16 @@ ERL_TS_FUNCTION(node_prev_named_sibling_nif) {
 
 ERL_TS_FUNCTION(node_first_child_for_byte_nif) {
   /* TSNode ts_node_first_child_for_byte(TSNode self, uint32_t byte); */
-  void *res_tsnode;
+  void *res_tsnode = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
-  TSNode tsnode = ((struct_TSNode *)res_tsnode)->val;
+  TSNode tsnode = *((struct_TSNode *)res_tsnode)->val;
 
   uint32_t byte;
   RETURN_BADARG_IF(!enif_get_uint(env, argv[1], &byte));
 
-  TSNode result = ts_node_first_child_for_byte(tsnode, byte);
+  TSNode *result = enif_alloc(sizeof(TSNode));
+  /* TSNode result = ts_node_first_child_for_byte(tsnode, byte); */
+  *result = ts_node_first_child_for_byte(tsnode, byte);
   struct_TSNode *res_result = enif_alloc_resource(res_TSNode, sizeof(struct_TSNode));
   res_result->val = result;
   ERL_NIF_TERM term_result = enif_make_resource(env, res_result);
@@ -1252,14 +1278,16 @@ ERL_TS_FUNCTION(node_first_child_for_byte_nif) {
 
 ERL_TS_FUNCTION(node_first_named_child_for_byte_nif) {
   /* TSNode ts_node_first_named_child_for_byte(TSNode self, uint32_t byte); */
-  void *res_tsnode;
+  void *res_tsnode = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
-  TSNode tsnode = ((struct_TSNode *)res_tsnode)->val;
+  TSNode tsnode = *((struct_TSNode *)res_tsnode)->val;
 
   uint32_t byte;
   RETURN_BADARG_IF(!enif_get_uint(env, argv[1], &byte));
 
-  TSNode result = ts_node_first_named_child_for_byte(tsnode, byte);
+  TSNode *result = enif_alloc(sizeof(TSNode));
+  /* TSNode result = ts_node_first_named_child_for_byte(tsnode, byte); */
+  *result = ts_node_first_named_child_for_byte(tsnode, byte);
   struct_TSNode *res_result = enif_alloc_resource(res_TSNode, sizeof(struct_TSNode));
   res_result->val = result;
   ERL_NIF_TERM term_result = enif_make_resource(env, res_result);
@@ -1269,9 +1297,9 @@ ERL_TS_FUNCTION(node_first_named_child_for_byte_nif) {
 
 ERL_TS_FUNCTION(node_descendant_count_nif) {
   /* uint32_t ts_node_descendant_count(TSNode self); */
-  void *res_tsnode;
+  void *res_tsnode = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
-  TSNode tsnode = ((struct_TSNode *)res_tsnode)->val;
+  TSNode tsnode = *((struct_TSNode *)res_tsnode)->val;
 
   uint32_t result = ts_node_descendant_count(tsnode);
   return enif_make_uint(env, result);
@@ -1279,9 +1307,9 @@ ERL_TS_FUNCTION(node_descendant_count_nif) {
 
 ERL_TS_FUNCTION(node_descendant_for_byte_range_nif) {
   /* TSNode ts_node_descendant_for_byte_range(TSNode self, uint32_t start, uint32_t end); */
-  void *res_tsnode;
+  void *res_tsnode = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
-  TSNode tsnode = ((struct_TSNode *)res_tsnode)->val;
+  TSNode tsnode = *((struct_TSNode *)res_tsnode)->val;
 
   uint32_t start;
   RETURN_BADARG_IF(!enif_get_uint(env, argv[1], &start));
@@ -1289,7 +1317,9 @@ ERL_TS_FUNCTION(node_descendant_for_byte_range_nif) {
   uint32_t end;
   RETURN_BADARG_IF(!enif_get_uint(env, argv[2], &end));
 
-  TSNode result = ts_node_descendant_for_byte_range(tsnode, start, end);
+  TSNode *result = enif_alloc(sizeof(TSNode));
+  /* TSNode result = ts_node_descendant_for_byte_range(tsnode, start, end); */
+  *result = ts_node_descendant_for_byte_range(tsnode, start, end);
   struct_TSNode *res_result = enif_alloc_resource(res_TSNode, sizeof(struct_TSNode));
   res_result->val = result;
   ERL_NIF_TERM term_result = enif_make_resource(env, res_result);
@@ -1299,15 +1329,17 @@ ERL_TS_FUNCTION(node_descendant_for_byte_range_nif) {
 
 ERL_TS_FUNCTION(node_descendant_for_point_range_nif) {
   /* TSNode ts_node_descendant_for_point_range(TSNode self, TSPoint start, TSPoint end); */
-  void *res_tsnode;
+  void *res_tsnode = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
-  TSNode tsnode = ((struct_TSNode *)res_tsnode)->val;
+  TSNode tsnode = *((struct_TSNode *)res_tsnode)->val;
 
   TSPoint start, end;
   RETURN_BADARG_IF(!map_to_tspoint(env, argv[1], &start));
   RETURN_BADARG_IF(!map_to_tspoint(env, argv[2], &end));
 
-  TSNode result = ts_node_descendant_for_point_range(tsnode, start, end);
+  TSNode *result = enif_alloc(sizeof(TSNode));
+  /* TSNode result = ts_node_descendant_for_point_range(tsnode, start, end); */
+  *result = ts_node_descendant_for_point_range(tsnode, start, end);
   struct_TSNode *res_result = enif_alloc_resource(res_TSNode, sizeof(struct_TSNode));
   res_result->val = result;
   ERL_NIF_TERM term_result = enif_make_resource(env, res_result);
@@ -1317,9 +1349,9 @@ ERL_TS_FUNCTION(node_descendant_for_point_range_nif) {
 
 ERL_TS_FUNCTION(node_named_descendant_for_byte_range_nif) {
   /* TSNode ts_node_named_descendant_for_byte_range(TSNode self, uint32_t start, uint32_t end); */
-  void *res_tsnode;
+  void *res_tsnode = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
-  TSNode tsnode = ((struct_TSNode *)res_tsnode)->val;
+  TSNode tsnode = *((struct_TSNode *)res_tsnode)->val;
 
   uint32_t start;
   RETURN_BADARG_IF(!enif_get_uint(env, argv[1], &start));
@@ -1327,7 +1359,10 @@ ERL_TS_FUNCTION(node_named_descendant_for_byte_range_nif) {
   uint32_t end;
   RETURN_BADARG_IF(!enif_get_uint(env, argv[2], &end));
 
-  TSNode result = ts_node_named_descendant_for_byte_range(tsnode, start, end);
+  TSNode *result = enif_alloc(sizeof(TSNode));
+  /* TSNode result = ts_node_named_descendant_for_byte_range(tsnode, start,
+   * end); */
+  *result = ts_node_named_descendant_for_byte_range(tsnode, start, end);
   struct_TSNode *res_result = enif_alloc_resource(res_TSNode, sizeof(struct_TSNode));
   res_result->val = result;
   ERL_NIF_TERM term_result = enif_make_resource(env, res_result);
@@ -1337,15 +1372,18 @@ ERL_TS_FUNCTION(node_named_descendant_for_byte_range_nif) {
 
 ERL_TS_FUNCTION(node_named_descendant_for_point_range_nif) {
   /* TSNode ts_node_named_descendant_for_point_range(TSNode self, TSPoint start, TSPoint end); */
-  void *res_tsnode;
+  void *res_tsnode = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
-  TSNode tsnode = ((struct_TSNode *)res_tsnode)->val;
+  TSNode tsnode = *((struct_TSNode *)res_tsnode)->val;
 
   TSPoint start, end;
   RETURN_BADARG_IF(!map_to_tspoint(env, argv[1], &start));
   RETURN_BADARG_IF(!map_to_tspoint(env, argv[2], &end));
 
-  TSNode result = ts_node_named_descendant_for_point_range(tsnode, start, end);
+  TSNode *result = enif_alloc(sizeof(TSNode));
+  /* TSNode result = ts_node_named_descendant_for_point_range(tsnode, start,
+   * end); */
+  *result = ts_node_named_descendant_for_point_range(tsnode, start, end);
   struct_TSNode *res_result = enif_alloc_resource(res_TSNode, sizeof(struct_TSNode));
   res_result->val = result;
   ERL_NIF_TERM term_result = enif_make_resource(env, res_result);
@@ -1356,9 +1394,9 @@ ERL_TS_FUNCTION(node_named_descendant_for_point_range_nif) {
 ERL_TS_FUNCTION(node_edit_nif) {
   /* Rarely recommended to be used */
   /* void ts_node_edit(TSNode *self, const TSInputEdit *edit); */
-  void *res_tsnode;
+  void *res_tsnode = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
-  TSNode tsnode = ((struct_TSNode *)res_tsnode)->val;
+  TSNode tsnode = *((struct_TSNode *)res_tsnode)->val;
 
   TSInputEdit edit;
   RETURN_BADARG_IF(!map_to_tsinput_edit(env, argv[1], &edit));
@@ -1369,13 +1407,13 @@ ERL_TS_FUNCTION(node_edit_nif) {
 
 ERL_TS_FUNCTION(node_eq_nif) {
   /* bool ts_node_eq(TSNode self, TSNode other); */
-  void *res_tsnode;
+  void *res_tsnode = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
-  TSNode tsnode = ((struct_TSNode *)res_tsnode)->val;
+  TSNode tsnode = *((struct_TSNode *)res_tsnode)->val;
 
-  void *res_other;
+  void *res_other = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[1], res_TSNode, &res_other));
-  TSNode other = ((struct_TSNode *)res_other)->val;
+  TSNode other = *((struct_TSNode *)res_other)->val;
 
   bool result = ts_node_eq(tsnode, other);
   return result? atom_true : atom_false;
@@ -1389,7 +1427,7 @@ ERL_TS_FUNCTION(tree_cursor_new_nif) {
   /* TSTreeCursor ts_tree_cursor_new(TSNode node); */
   void *res_node;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_node));
-  TSNode node = ((struct_TSNode *)res_node)->val;
+  TSNode node = *((struct_TSNode *)res_node)->val;
 
   TSTreeCursor result = ts_tree_cursor_new(node);
   struct_TSTreeCursor *res_result =
@@ -1424,7 +1462,9 @@ ERL_TS_FUNCTION(tree_cursor_current_node_nif) {
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSTreeCursor, &res_tstreecursor));
   TSTreeCursor tstreecursor = ((struct_TSTreeCursor *)res_tstreecursor)->val;
 
-  TSNode result = ts_tree_cursor_current_node(&tstreecursor);
+  TSNode *result = enif_alloc(sizeof(TSNode));
+  /* TSNode result = ts_tree_cursor_current_node(&tstreecursor); */
+  *result = ts_tree_cursor_current_node(&tstreecursor);
   struct_TSNode *res_result = enif_alloc_resource(res_TSNode, sizeof(struct_TSNode));
   res_result->val = result;
   ERL_NIF_TERM term_result = enif_make_resource(env, res_result);
@@ -1749,7 +1789,7 @@ ERL_TS_FUNCTION(query_disable_pattern_nif) {
 ERL_TS_FUNCTION(query_capture_nif) {
   void *res_tsnode;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
-  TSNode tsnode = ((struct_TSNode *)res_tsnode)->val;
+  TSNode tsnode = *((struct_TSNode *)res_tsnode)->val;
 
   void *res_query;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[1], res_TSQuery, &res_query));
@@ -1771,7 +1811,7 @@ ERL_TS_FUNCTION(query_capture_nif) {
         ts_query_capture_name_for_id(query, qc.index, &length);
 
       struct_TSNode *res_result = enif_alloc_resource(res_TSNode, sizeof(struct_TSNode));
-      res_result->val = qc.node;
+      *res_result->val = qc.node;
       ERL_NIF_TERM term_result = enif_make_resource(env, res_result);
       enif_release_resource(res_result);
 
@@ -1812,7 +1852,7 @@ ERL_TS_FUNCTION(query_cursor_exec_nif) {
 
   void *res_node;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[2], res_TSNode, &res_node));
-  TSNode node = ((struct_TSNode *)res_node)->val;
+  TSNode node = *((struct_TSNode *)res_node)->val;
 
   ts_query_cursor_exec(tsquerycursor, query, node);
   return atom_ok;
