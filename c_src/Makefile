@@ -13,6 +13,10 @@ ERL_INTERFACE_LIB_DIR ?= $(shell erl -noshell -eval "io:format(\"~ts\", [code:li
 C_SRC_DIR = $(CURDIR)
 C_SRC_OUTPUT ?= $(CURDIR)/../priv/$(PROJECT).so
 
+# For mere debugging, just pass the flag -g, the other flags are to catch segfaults.
+# Erlang/OTP must be compiled with the same targets as well as tree-sitter
+# DEBUG_FLAGS += -g -fsanitize=address -fno-common -fno-omit-frame-pointer
+
 # System type and C compiler/flags.
 
 UNAME_SYS := $(shell uname -s)
@@ -34,7 +38,7 @@ endif
 CFLAGS += -fPIC -I $(ERTS_INCLUDE_DIR) -I $(ERL_INTERFACE_INCLUDE_DIR) -I $(BASEDIR)/tree-sitter-langs/include
 CXXFLAGS += -fPIC -I $(ERTS_INCLUDE_DIR) -I $(ERL_INTERFACE_INCLUDE_DIR) -I $(BASEDIR)/tree-sitter-langs/include
 
-LDLIBS += -L $(ERL_INTERFACE_LIB_DIR) -L $(BASEDIR)/tree-sitter-langs/ -lei -ltree-sitter -ltree-sitter-erlang
+LDLIBS += -L $(ERL_INTERFACE_LIB_DIR) -L $(BASEDIR)/tree-sitter-langs/ -lei -ltree-sitter-erlang -I $(BASEDIR)/tree-sitter/lib/include $(BASEDIR)/tree-sitter/libtree-sitter.a
 LDFLAGS += -shared
 
 # Verbosity.

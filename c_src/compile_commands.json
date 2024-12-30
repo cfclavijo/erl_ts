@@ -1,7 +1,7 @@
 [
   {
     "directory": ".",
-    "command": "cc -O3 -std=c99 -finline-functions -Wall -Wmissing-prototypes -fPIC -I /usr/lib64/erlang/erts-14.2.5.4/include/ -I /usr/lib64/erlang/lib/erl_interface-5.5.1/include -I /home/arkan/workspace/erl_ts/tree-sitter-langs/include  -c -o /home/arkan/workspace/erl_ts/c_src/erl_ts_nif.o /home/arkan/workspace/erl_ts/c_src/erl_ts_nif.c",
+    "command": "cc -O3 -std=c99 -finline-functions -Wall -Wmissing-prototypes -fPIC -I /usr/lib64/erlang/erts-14.2.5.5/include/ -I /usr/lib64/erlang/lib/erl_interface-5.5.1/include -I /home/arkan/workspace/erl_ts/tree-sitter-langs/include  -c -o /home/arkan/workspace/erl_ts/c_src/erl_ts_nif.o /home/arkan/workspace/erl_ts/c_src/erl_ts_nif.c",
     "file": "/home/arkan/workspace/erl_ts/c_src/erl_ts_nif.c"
   }
 ]
