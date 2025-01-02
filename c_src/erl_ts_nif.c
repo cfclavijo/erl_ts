@@ -5,9 +5,18 @@
 #include <stdio.h>
 #include <string.h>
 #include <tree_sitter/api.h>
+#include <erl_nif.h>
+#include <tree_sitter/api.h>
 
-#include "erl_ts_nif.h"
-#include "erl_nif.h"
+#define ERL_TS_FUNCTION_DECL(f) \
+  static ERL_NIF_TERM f(ErlNifEnv* , int, const ERL_NIF_TERM []);
+
+#define ERL_TS_FUNCTION(f) \
+  static ERL_NIF_TERM f(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[])
+
+#define ERL_TS_FUNCTION_ARRAY(f , a) { #f, a, f ## _nif }
+
+#define RETURN_BADARG_IF(p) if (p) return enif_make_badarg(env)
 
 /* for testing purpose  */
 const TSLanguage *tree_sitter_erlang(void);
