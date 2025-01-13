@@ -116,8 +116,11 @@ typedef struct {
 } struct_TSTreeCursor;
 
 void free_TSLanguage(ErlNifEnv *env, void *object) {
-  const TSLanguage* lang = ((struct_TSLanguage *)object)->val;
+  const TSLanguage *lang = ((struct_TSLanguage *)object)->val;
+  if (!lang)
+    return;
   ts_language_delete(lang);
+  lang = NULL;
 }
 
 void free_TSParser(ErlNifEnv *env, void *object) {
@@ -126,8 +129,14 @@ void free_TSParser(ErlNifEnv *env, void *object) {
 }
 
 void free_TSTree(ErlNifEnv *env, void *object) {
-  TSTree *tree = ((struct_TSTree *)object)->val;
-  ts_tree_delete(tree);
+  /* struct_TSTree *res_TSTree = (struct_TSTree *)object; */
+  /* /\* TSTree *tree = ((struct_TSTree *)object)->val; *\/ */
+  /* TSTree *tree = res_TSTree->val; */
+  /* if (tree == NULL) */
+  /*   return; */
+  /* ts_tree_delete(tree); */
+  /* res_TSTree->val = NULL; */
+  return;
 }
 
 void free_TSQuery(ErlNifEnv *env, void *object) {
@@ -755,9 +764,15 @@ ERL_TS_FUNCTION(tree_copy_nif) {
 }
 
 ERL_TS_FUNCTION(tree_delete_nif) {
-  /* TODO: maybe we don´t need to implement it */
   /* void ts_tree_delete(TSTree *self); */
-  return atom_undefined;
+  struct_TSTree *res_tstree = NULL;
+  RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSTree, (void **)&res_tstree));
+  TSTree *tstree = res_tstree->val;
+  if (tstree == NULL)
+    return atom_ok;
+  ts_tree_delete(tstree);
+  res_tstree->val = NULL;
+  return atom_ok;
 }
 
 ERL_TS_FUNCTION(tree_root_node_nif) {
@@ -1072,6 +1087,9 @@ ERL_TS_FUNCTION(node_child_nif) {
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
   TSNode tsnode = ((struct_TSNode *)res_tsnode)->val;
 
+  if (tsnode.tree == NULL) {
+    return enif_make_tuple2(env, atom_error, mk_atom(env, "tstree_freed"));
+  }
   uint32_t child_index;
   RETURN_BADARG_IF(!enif_get_uint(env, argv[1], &child_index));
 
@@ -1109,6 +1127,10 @@ ERL_TS_FUNCTION(node_child_count_nif) {
   void *res_node = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_node));
   TSNode node = ((struct_TSNode *)res_node)->val;
+
+  if (node.tree == NULL) {
+    return enif_make_tuple2(env, atom_error, mk_atom(env, "tstree_freed"));
+  }
 
   uint32_t count = ts_node_child_count(node);
   ERL_NIF_TERM term_count = enif_make_uint(env, count);

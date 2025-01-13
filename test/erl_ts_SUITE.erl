@@ -75,8 +75,9 @@ segfault_post_print(_Config) ->
   %% ?assertNot(erl_ts:node_is_null(RootNode)),
   %% RootNodeB = erl_ts:tree_root_node(Tree), %% this also makes the subsequent calls to erl_ts work
   FunDeclNode = erl_ts:node_child(RootNode, 0),
+  ?assertNotEqual({error,tstree_freed}, FunDeclNode),
   ChildCount = erl_ts:node_child_count(FunDeclNode),
-  %% ?assertEqual(2, ChildCount),
+  ?assertEqual(2, ChildCount),
 
   %% FunClauseNode = erl_ts:node_child(FunDeclNode, 0),
   %% PointNode = erl_ts:node_child(FunDeclNode, 1),
@@ -89,4 +90,5 @@ segfault_post_print(_Config) ->
   %% A = erl_ts:node_end_byte(FunDeclNode),
   %% A = erl_ts:node_end_byte(FunDeclNode),
   ct:pal("ending"),
+  erl_ts:tree_delete(Tree),
   ok.
