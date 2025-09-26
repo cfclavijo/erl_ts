@@ -1056,7 +1056,28 @@ ERL_TS_FUNCTION(node_parent_nif) {
 }
 
 ERL_TS_FUNCTION(node_child_containing_descendant_nif) {
+  /* TODO: TREE_SITTER <= 24 */
   /* TSNode ts_node_child_containing_descendant(TSNode self, TSNode descendant); */
+  /* void *res_tsnode = NULL; */
+  /* RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode)); */
+  /* TSNode tsnode = ((struct_TSNode *)res_tsnode)->val; */
+
+  /* void *res_descendant = NULL; */
+  /* RETURN_BADARG_IF(!enif_get_resource(env, argv[1], res_TSNode, &res_descendant)); */
+  /* TSNode descendant = ((struct_TSNode *)res_descendant)->val; */
+
+  /* TSNode result = ts_node_child_containing_descendant(tsnode, descendant); */
+  /* struct_TSNode *res_result = enif_alloc_resource(res_TSNode, sizeof(struct_TSNode)); */
+  /* res_result->val = result; */
+  /* ERL_NIF_TERM term_result = enif_make_resource(env, res_result); */
+  /* enif_release_resource(res_result); */
+  /* return term_result; */
+  return atom_undefined;
+}
+
+ERL_TS_FUNCTION(node_child_with_descendant_nif) {
+  /* TODO: TREE_SITTER_LANGUAGE_VERSION > 14 */
+  /* TSNode ts_node_child_with_descendant(TSNode self, TSNode descendant); */
   void *res_tsnode = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
   TSNode tsnode = ((struct_TSNode *)res_tsnode)->val;
@@ -1065,18 +1086,12 @@ ERL_TS_FUNCTION(node_child_containing_descendant_nif) {
   RETURN_BADARG_IF(!enif_get_resource(env, argv[1], res_TSNode, &res_descendant));
   TSNode descendant = ((struct_TSNode *)res_descendant)->val;
 
-  TSNode result = ts_node_child_containing_descendant(tsnode, descendant);
+  TSNode result = ts_node_child_with_descendant(tsnode, descendant);
   struct_TSNode *res_result = enif_alloc_resource(res_TSNode, sizeof(struct_TSNode));
   res_result->val = result;
   ERL_NIF_TERM term_result = enif_make_resource(env, res_result);
   enif_release_resource(res_result);
   return term_result;
-}
-
-ERL_TS_FUNCTION(node_child_with_descendant_nif) {
-  /* TODO: TREE_SITTER_LANGUAGE_VERSION > 14 */
-  /* TSNode ts_node_child_with_descendant(TSNode self, TSNode descendant); */
-  return atom_undefined;
 }
 
 ERL_TS_FUNCTION(node_child_nif) {
@@ -1217,6 +1232,8 @@ ERL_TS_FUNCTION(node_next_sibling_nif) {
   TSNode tsnode = ((struct_TSNode *)res_tsnode)->val;
 
   TSNode result = ts_node_next_sibling(tsnode);
+  if (ts_node_is_null(result))
+    return atom_undefined;
   struct_TSNode *res_result = enif_alloc_resource(res_TSNode, sizeof(struct_TSNode));
   res_result->val = result;
   ERL_NIF_TERM term_result = enif_make_resource(env, res_result);
@@ -1231,6 +1248,8 @@ ERL_TS_FUNCTION(node_prev_sibling_nif) {
   TSNode tsnode = ((struct_TSNode *)res_tsnode)->val;
 
   TSNode result = ts_node_prev_sibling(tsnode);
+  if (ts_node_is_null(result))
+    return atom_undefined;
   struct_TSNode *res_result = enif_alloc_resource(res_TSNode, sizeof(struct_TSNode));
   res_result->val = result;
   ERL_NIF_TERM term_result = enif_make_resource(env, res_result);

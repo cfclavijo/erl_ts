@@ -50,7 +50,9 @@ groups() ->
   [].
 
 all() ->
-  [segfault_post_print].
+  [ segfault_post_print
+  , not_found_siblings_fun_return_undefined
+  ].
 
 %% @doc The communication between Erlang and C goes through ERL_NIF_TERMS which
 %% ideally are being explicitly marked to be freed by the BEAM. However, if
@@ -91,4 +93,19 @@ segfault_post_print(_Config) ->
   %% A = erl_ts:node_end_byte(FunDeclNode),
   ct:pal("ending"),
   erl_ts:tree_delete(Tree),
+  ok.
+
+not_found_siblings_fun_return_undefined(_Config) ->
+  SC = "fun(A)->1+2.",
+  {ok, Parser} = erl_ts:parser_new(),
+  {ok, Lang} = erl_ts:tree_sitter_erlang(),
+  true = erl_ts:parser_set_language(Parser, Lang),
+  Tree = erl_ts:parser_parse_string(Parser, SC),
+  RootNode = erl_ts:tree_root_node(Tree),
+  FunDeclNode = erl_ts:node_child(RootNode, 0),
+  PrevSiblingNode = erl_ts:node_prev_sibling(FunDeclNode),
+  NextSiblingNode = erl_ts:node_next_sibling(FunDeclNode),
+  erl_ts:tree_delete(Tree),
+  ?assertEqual(undefined, PrevSiblingNode),
+  ?assertEqual(undefined, NextSiblingNode),
   ok.
