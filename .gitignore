@@ -20,3 +20,5 @@ rebar3.crashdump
 *~
 *.idx
 logs
+*.a
+*.so

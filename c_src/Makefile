@@ -35,10 +35,12 @@ else ifeq ($(UNAME_SYS), Linux)
 	CXXFLAGS ?= -O3 -finline-functions -Wall
 endif
 
-CFLAGS += -fPIC -I $(ERTS_INCLUDE_DIR) -I $(ERL_INTERFACE_INCLUDE_DIR) -I $(BASEDIR)/tree-sitter-langs/include
-CXXFLAGS += -fPIC -I $(ERTS_INCLUDE_DIR) -I $(ERL_INTERFACE_INCLUDE_DIR) -I $(BASEDIR)/tree-sitter-langs/include
+TS_INCLUDE_DIR ?= $(BASEDIR)/tree-sitter/lib/include/ $(BASEDIR)/tree-sitter/libtree-sitter.a
+TS_ERLANG_INCLUDE_DIR ?= $(BASEDIR)/tree-sitter-langs/tree-sitter-erlang/bindings/c/ $(BASEDIR)/tree-sitter-langs/libtree-sitter-erlang.a
+CFLAGS += -fPIC -I $(ERTS_INCLUDE_DIR) -I $(ERL_INTERFACE_INCLUDE_DIR) -I $(TS_INCLUDE_DIR) -I $(TS_ERLANG_INCLUDE_DIR)
+CXXFLAGS += -fPIC -I $(ERTS_INCLUDE_DIR) -I $(ERL_INTERFACE_INCLUDE_DIR)
 
-LDLIBS += -L $(ERL_INTERFACE_LIB_DIR) -L $(BASEDIR)/tree-sitter-langs/ -lei -ltree-sitter-erlang -I $(BASEDIR)/tree-sitter/lib/include $(BASEDIR)/tree-sitter/libtree-sitter.a
+LDLIBS += -L $(ERL_INTERFACE_LIB_DIR)
 LDFLAGS += -shared
 
 # Verbosity.
