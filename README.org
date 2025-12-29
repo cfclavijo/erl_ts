@@ -23,6 +23,10 @@ The environment variable ~ERL_TS_LINKING=dynamic~ controls the dynamic linking, 
 
 ~$ rebar3 ct~
 
+** Develop
+
+~$ ./build_c_db.sh~ to generate ~c_src/compile_commands.json~ to be used by clangd to help navigate and highlight errors in the C side
+
 ** Usage example
 
 Note: call ~erl_ts:init()~ only once per execution as it will load ~erl_ts.so~ and reloading these libraries are not supported by Erlang/OTP.
