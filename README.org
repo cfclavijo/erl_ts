@@ -13,13 +13,19 @@ Where is the elisp part? well, I wrote a code generator in less than 1 hour to p
 
 ** Build
 
-Ensure ~libtree-sitter~ and ~libtree-sitter-erlang.so~ are part of ~LDLIBS~
-
 ~$ rebar3 compile~
+
+tree-sitter and tree-sitter-erlang are sub-repositories that are going to be build and generate the dynamic and static libraries. By default, erl_ts will statically link both libraries into ~erl_ts.so~ such that it can be integrated with ease in other projects.
+
+The environment variable ~ERL_TS_LINKING=dynamic~ controls the dynamic linking, in such case, ensure ~libtree-sitter~ and ~libtree-sitter-erlang.so~ are part of ~LDLIBS~
 
 ** Test
 
-call ~erl_ts:init()~ only once per execution as it will load ~erl_ts.so~ and reloading these libraries are not supported by Erlang/OTP.
+~$ rebar3 ct~
+
+** Usage example
+
+Note: call ~erl_ts:init()~ only once per execution as it will load ~erl_ts.so~ and reloading these libraries are not supported by Erlang/OTP.
 
 ~$ rebar3 shell~
 
