@@ -1,0 +1,36 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "(gdb) Launch",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": 
+          "/home/arkan/.otp_builds/otp-26/lib/erlang/erts-14.2.5.5/bin/beam.debug.smp",
+        "args": [
+            //"-bindir", "/home/arkan/.otp_builds/otp-26/lib/erlang/erts-14.2.5.5/bin",
+            "-S", "4:4",
+            "-B",
+            "--", "-root", "/home/arkan/.otp_builds/otp-26/lib/erlang/",
+            "-home", "/home/arkan",
+            "-boot", "no_dot_erlang",
+            "-run", "escript",
+            "-extra", "/home/arkan/.local/bin/rebar3",
+            "ct"
+        ],
+        "cwd": "${workspaceFolder}",
+        "environment": [{
+          "name": "BINDIR", 
+          "value": "/home/arkan/.otp_builds/otp-26/lib/erlang/erts-14.2.5.5/bin"
+        }],
+        "MIMode": "gdb",
+        "setupCommands": [
+          {
+            "description": "Load Erlang Pathologist Toolkit",
+            "text": "-interpreter-exec console \"source -v /home/arkan/workspace/OTP/erts/etc/unix/etp-commands\"",
+            "ignoreFailures": true
+          }
+        ]
+    }
+  ]
+}
