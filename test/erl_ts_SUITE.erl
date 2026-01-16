@@ -20,7 +20,15 @@
 %%%-------------------------------------------------------------------
 -module(erl_ts_SUITE).
 
--compile(export_all).
+-export([all/0, groups/0, suite/0]).
+-export([ init_per_suite/1
+        , end_per_suite/1
+        , init_per_group/2
+        , end_per_group/2
+        , init_per_testcase/2
+        , end_per_testcase/2]).
+-export([ no_segfault_post_print/1
+        , no_sibling_return_undefined/1]).
 
 -include_lib("common_test/include/ct.hrl").
 -include_lib("stdlib/include/assert.hrl").
@@ -50,21 +58,20 @@ groups() ->
   [].
 
 all() ->
-  [ segfault_post_print
-  , not_found_siblings_fun_return_undefined
+  [ no_segfault_post_print
+  , no_sibling_return_undefined
   ].
 
 %% @doc The communication between Erlang and C goes through ERL_NIF_TERMS which
 %% ideally are being explicitly marked to be freed by the BEAM. However, if
 %% subsequent objects require access to a resource that was marked to be freed,
 %% a race condition starts that will probably end in a segmentation fault.
-%% The ct:print statement seems to be the point where the BEAM starts making
-%% calls to free resources, as such, any subsequent call to a resource dependant
+%% The ct:print statement seems to be one of the points where the BEAM starts making
+%% calls to free resources, as such, any subsequent call to a resource dependant on it
 %% would show the aforementioned behavior.
-%% It is then responsibility to the users to decide on expliciteness when calling
+%% It is then the responsibility of the users to decide on expliciteness when calling
 %% the destructors for those resources of high importance (i.e. TSParser, TSTree).
-%% This tests exemplifies the challenges of memory management.
-segfault_post_print(_Config) ->
+no_segfault_post_print(_Config) ->
   SC = "fun(A)->1+2.",
   {ok, Parser} = erl_ts:parser_new(),
   {ok, Lang} = erl_ts:tree_sitter_erlang(),
@@ -72,30 +79,20 @@ segfault_post_print(_Config) ->
   Tree = erl_ts:parser_parse_string(Parser, SC),
   RootNode = erl_ts:tree_root_node(Tree),
   ct:print(default, ?LOW_IMPORTANCE, "ct:print + erl_ts:node_end_byte = segfault", [], []),
-  %% ct:pal("~p~nFunDeclNode=~p", [{?MODULE, ?FUNCTION_NAME, ?LINE}, erl_ts:node_child(RootNode, 0)]),
-  %% erl_ts:tree_language(Tree), %% this makes the subsequent calls to erl_ts work
-  %% ?assertNot(erl_ts:node_is_null(RootNode)),
-  %% RootNodeB = erl_ts:tree_root_node(Tree), %% this also makes the subsequent calls to erl_ts work
+  ct:pal("a flush could mark the Tree or their child nodes as to be deleted"),
   FunDeclNode = erl_ts:node_child(RootNode, 0),
   ?assertNotEqual({error,tstree_freed}, FunDeclNode),
   ChildCount = erl_ts:node_child_count(FunDeclNode),
-  ?assertEqual(2, ChildCount),
+  ?assertEqual(3, ChildCount),
 
-  %% FunClauseNode = erl_ts:node_child(FunDeclNode, 0),
-  %% PointNode = erl_ts:node_child(FunDeclNode, 1),
-
-  %% ?assertEqual("fun(A)->1+2", erl_ts:node_text(FunClauseNode, SC)),
-  %% ?assertEqual(".", erl_ts:node_text(PointNode, SC)),
-
-  %% ?assertEqual("fun(A)->1+2.", erl_ts:node_text(FunDeclNode, SC)),
-  %% erl_ts:node_start_byte(FunDeclNode),
-  %% A = erl_ts:node_end_byte(FunDeclNode),
-  %% A = erl_ts:node_end_byte(FunDeclNode),
+  FunNode = erl_ts:node_child(FunDeclNode, 0),
+  ?assertEqual("fun", erl_ts:node_text(FunNode, SC)),
   ct:pal("ending"),
-  erl_ts:tree_delete(Tree),
+  ok = erl_ts:tree_delete(Tree), %% Finally, explicitly free the resource
   ok.
 
-not_found_siblings_fun_return_undefined(_Config) ->
+%% @doc return undefined when a sibling node does not exist.
+no_sibling_return_undefined(_Config) ->
   SC = "fun(A)->1+2.",
   {ok, Parser} = erl_ts:parser_new(),
   {ok, Lang} = erl_ts:tree_sitter_erlang(),
@@ -104,8 +101,10 @@ not_found_siblings_fun_return_undefined(_Config) ->
   RootNode = erl_ts:tree_root_node(Tree),
   FunDeclNode = erl_ts:node_child(RootNode, 0),
   PrevSiblingNode = erl_ts:node_prev_sibling(FunDeclNode),
-  NextSiblingNode = erl_ts:node_next_sibling(FunDeclNode),
+  DotNode = erl_ts:node_next_sibling(FunDeclNode), %% a dot node .
+  NextSiblingNode = erl_ts:node_next_sibling(DotNode),
   erl_ts:tree_delete(Tree),
   ?assertEqual(undefined, PrevSiblingNode),
+  ?assertNotEqual(undefined, DotNode),
   ?assertEqual(undefined, NextSiblingNode),
   ok.
