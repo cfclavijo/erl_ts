@@ -22,3 +22,4 @@ rebar3.crashdump
 logs
 *.a
 *.so
+compile_commands.json
