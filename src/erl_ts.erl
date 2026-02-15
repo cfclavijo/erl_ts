@@ -312,9 +312,11 @@ init() ->
     end,
   ok = erlang:load_nif(ErlTsLib, 0).
 
+-spec tree_sitter_erlang() -> {ok, TSLang :: term()} | no_return().
 tree_sitter_erlang() ->
   erlang:nif_error(nif_library_not_loaded).
 
+-spec parser_new() -> {ok, TSLang :: term()} | no_return().
 parser_new() ->
   erlang:nif_error(nif_library_not_loaded).
 
@@ -324,6 +326,7 @@ parser_delete(_) ->
 parser_language(_) ->
   erlang:nif_error(nif_library_not_loaded).
 
+-spec parser_set_language(TSParser :: term(), TSLang :: term()) -> boolean() | no_return().
 parser_set_language(_, _) ->
   erlang:nif_error(nif_library_not_loaded).
 
@@ -339,6 +342,7 @@ parser_parse(_, _, _) ->
 parser_parse_with_options(_, _, _, _) ->
   erlang:nif_error(nif_library_not_loaded).
 
+-spec parser_parse_string(TSParser :: term(), string()) -> TSTree :: term() | no_return().
 parser_parse_string(_, _) ->
   erlang:nif_error(nif_library_not_loaded).
 
@@ -378,6 +382,7 @@ tree_copy(_) ->
 tree_delete(_) ->
   erlang:nif_error(nif_library_not_loaded).
 
+-spec tree_root_node(TSTree :: term()) -> TSNode :: term() | no_return().
 tree_root_node(_) ->
   erlang:nif_error(nif_library_not_loaded).
 
@@ -426,6 +431,7 @@ node_end_byte(_) ->
 node_end_point(_) ->
   erlang:nif_error(nif_library_not_loaded).
 
+-spec node_string(TSNode :: term()) -> string() | no_return().
 node_string(_) ->
   erlang:nif_error(nif_library_not_loaded).
 
@@ -592,12 +598,14 @@ tree_cursor_goto_first_child_for_point(_, _) ->
 tree_cursor_copy(_) ->
   erlang:nif_error(nif_library_not_loaded).
 
+-spec query_new(TSLang :: term(), string()) -> {TSQuery :: term(), pos_integer(), atom()} | no_return().
 query_new(_, _) ->
   erlang:nif_error(nif_library_not_loaded).
 
 query_delete(_) ->
   erlang:nif_error(nif_library_not_loaded).
 
+-spec query_pattern_count(TSQuery :: term()) -> pos_integer() | no_return().
 query_pattern_count(_) ->
   erlang:nif_error(nif_library_not_loaded).
 

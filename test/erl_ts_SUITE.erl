@@ -28,7 +28,10 @@
         , init_per_testcase/2
         , end_per_testcase/2]).
 -export([ no_segfault_post_print/1
-        , no_sibling_return_undefined/1]).
+        , no_sibling_return_undefined/1
+        , basic_functionality/1
+        , query_function_test/1
+        ]).
 
 -include_lib("common_test/include/ct.hrl").
 -include_lib("stdlib/include/assert.hrl").
@@ -60,6 +63,8 @@ groups() ->
 all() ->
   [ no_segfault_post_print
   , no_sibling_return_undefined
+  , basic_functionality
+  , query_function_test
   ].
 
 %% @doc The communication between Erlang and C goes through ERL_NIF_TERMS which
@@ -108,3 +113,53 @@ no_sibling_return_undefined(_Config) ->
   ?assertNotEqual(undefined, DotNode),
   ?assertEqual(undefined, NextSiblingNode),
   ok.
+
+%% @doc Test that the core TS‑Parser functions work as expected.
+basic_functionality(_Config) ->
+  SC = "fun(A) -> 1 + 2.", %% simple Erlang expression
+  {ok, Parser} = erl_ts:parser_new(),
+  {ok, Lang} = erl_ts:tree_sitter_erlang(),
+  true = erl_ts:parser_set_language(Parser, Lang),
+  Tree = erl_ts:parser_parse_string(Parser, SC),
+  RootNode = erl_ts:tree_root_node(Tree),
+
+                                             % Verify parse tree has expected structure (as before)
+  FunDeclNode = erl_ts:node_child(RootNode, 0),      % fun declaration is first child of root node
+  ?assertNotEqual(undefined, FunDeclNode),
+  ChildCount = erl_ts:node_child_count(FunDeclNode),
+  ?assertEqual(3, ChildCount),                            %- FUN_NODE | ARG_LIST | DOT_NODE
+
+  FunNode = erl_ts:node_child(FunDeclNode, 0),       % the “fun” keyword node
+  ?assertEqual("fun", erl_ts:node_text(FunNode, SC)),
+
+  %% New sibling checks for FunNode
+  PrevSibling = erl_ts:node_prev_sibling(FunNode),      % should be undefined before the fun starts
+  NextSibling = erl_ts:node_next_sibling(FunNode),      % points to argument list node (e.g., (")
+
+  ?assertEqual(undefined, PrevSibling),                   % no previous sibling for FunNode
+  ?assertNotEqual(undefined, NextSibling),           % there is a next sibling (argument list)
+  ArgListText = erl_ts:node_text(NextSibling, SC),
+  ?assertEqual("(A) -> 1 + 2", ArgListText),               %% full expected text
+  ok = erl_ts:tree_delete(Tree).
+
+%% @doc Verify erl_ts:query_new/2 function works correctly
+query_function_test(_Config) ->
+  SC = "fun(A)->1+2.\nfoo(B)->3.",
+  {ok, Parser} = erl_ts:parser_new(),
+  {ok, Lang}   = erl_ts:tree_sitter_erlang(),
+  true = erl_ts:parser_set_language(Parser, Lang),
+  Tree = erl_ts:parser_parse_string(Parser, SC),
+  RootNode = erl_ts:tree_root_node(Tree),
+
+  ?assertEqual(
+     "(source_file exprs: (anonymous_fun clauses: "
+"(fun_clause args: (expr_args args: (var)) body: (clause_body exprs: "
+"(binary_op_expr lhs: (integer) rhs: (integer)))) (MISSING \"end\")) "
+"exprs: (call expr: (atom) args: (expr_args args: (var))) (ERROR) exprs: (integer))",
+     erl_ts:node_string(RootNode)),
+
+  QueryString = "(fun_clause)",
+  {Query, _, NoError} = erl_ts:query_new(Lang, QueryString),
+  ?assertEqual(error_none, NoError),
+  ?assertEqual(1, erl_ts:query_pattern_count(Query)),
+  ok = erl_ts:tree_delete(Tree).
