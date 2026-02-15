@@ -4,7 +4,6 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
-#include <tree_sitter/api.h>
 #include <erl_nif.h>
 #include <tree_sitter/api.h>
 
@@ -129,14 +128,12 @@ void free_TSParser(ErlNifEnv *env, void *object) {
 }
 
 void free_TSTree(ErlNifEnv *env, void *object) {
-  /* struct_TSTree *res_TSTree = (struct_TSTree *)object; */
-  /* /\* TSTree *tree = ((struct_TSTree *)object)->val; *\/ */
-  /* TSTree *tree = res_TSTree->val; */
-  /* if (tree == NULL) */
-  /*   return; */
-  /* ts_tree_delete(tree); */
-  /* res_TSTree->val = NULL; */
-  return;
+  struct_TSTree *res_tree = (struct_TSTree *)object;
+  TSTree *tree = res_tree->val;
+  if (tree == NULL)
+    return;
+  ts_tree_delete(tree);
+  res_tree->val = NULL;
 }
 
 void free_TSQuery(ErlNifEnv *env, void *object) {

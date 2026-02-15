@@ -23,6 +23,25 @@ The environment variable ~ERL_TS_LINKING=dynamic~ controls the dynamic linking, 
 
 ~$ rebar3 ct~
 
+** Resource Management
+
+TSTree resources created by ~erl_ts:parser_parse_string/2~ must be explicitly
+released using ~erl_ts:tree_delete/1~ to free the underlying C memory.
+
+#+begin_example erlang
+  %% Create a tree
+  Tree = erl_ts:parser_parse_string(Parser, SourceCode),
+
+  %% Use the tree...
+  RootNode = erl_ts:tree_root_node(Tree),
+
+  %% IMPORTANT: Explicitly delete to free C memory
+  ok = erl_ts:tree_delete(Tree).
+#+end_example
+
+Alternatively, if you don't call ~tree_delete/1~, the tree will be garbage
+collected by BEAM, and the NIF's destructor will free the C memory automatically.
+
 ** Develop
 
 ~$ ./build_c_db.sh~ to generate ~c_src/compile_commands.json~ to be used by clangd to help navigate and highlight errors in the C side

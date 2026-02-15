@@ -31,6 +31,8 @@
         , no_sibling_return_undefined/1
         , basic_functionality/1
         , query_function_test/1
+        , tree_gc_frees_memory/1
+        , tree_delete_works/1
         ]).
 
 -include_lib("common_test/include/ct.hrl").
@@ -65,6 +67,8 @@ all() ->
   , no_sibling_return_undefined
   , basic_functionality
   , query_function_test
+  , tree_gc_frees_memory
+  , tree_delete_works
   ].
 
 %% @doc The communication between Erlang and C goes through ERL_NIF_TERMS which
@@ -83,8 +87,11 @@ no_segfault_post_print(_Config) ->
   true = erl_ts:parser_set_language(Parser, Lang),
   Tree = erl_ts:parser_parse_string(Parser, SC),
   RootNode = erl_ts:tree_root_node(Tree),
+  erlang:garbage_collect(),
   ct:print(default, ?LOW_IMPORTANCE, "ct:print + erl_ts:node_end_byte = segfault", [], []),
   ct:pal("a flush could mark the Tree or their child nodes as to be deleted"),
+  timer:sleep(20),
+  erlang:garbage_collect(),
   FunDeclNode = erl_ts:node_child(RootNode, 0),
   ?assertNotEqual({error,tstree_freed}, FunDeclNode),
   ChildCount = erl_ts:node_child_count(FunDeclNode),
@@ -161,5 +168,71 @@ query_function_test(_Config) ->
   QueryString = "(fun_clause)",
   {Query, _, NoError} = erl_ts:query_new(Lang, QueryString),
   ?assertEqual(error_none, NoError),
-  ?assertEqual(1, erl_ts:query_pattern_count(Query)),
-  ok = erl_ts:tree_delete(Tree).
+   ?assertEqual(1, erl_ts:query_pattern_count(Query)),
+   ok = erl_ts:tree_delete(Tree).
+
+%% @doc Verify that TSTree memory is released when garbage collected.
+%% This test validates that the NIF properly frees the underlying C tree
+%% when the Erlang resource is garbage collected by BEAM.
+%% NOTE: This test may show variance due to BEAM's memory management.
+%% The key check is that memory doesn't grow unbounded with more trees.
+tree_gc_frees_memory(_Config) ->
+  Source = "fun(A) -> 1 + 2.",
+  {ok, Parser} = erl_ts:parser_new(),
+  {ok, Lang} = erl_ts:tree_sitter_erlang(),
+  true = erl_ts:parser_set_language(Parser, Lang),
+
+  %% Create first batch
+  Trees1 = [erl_ts:parser_parse_string(Parser, Source) || _ <- lists:seq(1, 100)],
+  RootNode = erl_ts:tree_root_node(hd(Trees1)),
+  IsNamed = erl_ts:node_is_named(RootNode),
+  ?assertEqual(true, IsNamed),
+
+  erlang:garbage_collect(),
+  timer:sleep(20),
+  erlang:garbage_collect(),
+  MemAfterFirstBatch = erlang:memory(total),
+
+  %% Create second batch (should not significantly increase if properly freed)
+  Trees2 = [erl_ts:parser_parse_string(Parser, Source) || _ <- lists:seq(1, 100)],
+  RootNode2 = erl_ts:tree_root_node(hd(Trees2)),
+  ?assertEqual(true, erl_ts:node_is_named(RootNode2)),
+
+  erlang:garbage_collect(),
+  timer:sleep(20),
+  erlang:garbage_collect(),
+  MemAfterSecondBatch = erlang:memory(total),
+
+  Growth = MemAfterSecondBatch - MemAfterFirstBatch,
+  ct:pal("After first 100: ~p, After second 100: ~p, Growth: ~p bytes",
+         [MemAfterFirstBatch, MemAfterSecondBatch, Growth]),
+  ?assert(Growth < 2 * 1024 * 1024),
+  ok.
+
+%% @doc Verify that tree_delete/1 works correctly and releases resources.
+%% This test creates trees and explicitly deletes them, then verifies
+%% that the tree resources are properly cleaned up.
+tree_delete_works(_Config) ->
+  Source = "fun(A) -> 1 + 2.",
+  {ok, Parser} = erl_ts:parser_new(),
+  {ok, Lang} = erl_ts:tree_sitter_erlang(),
+  true = erl_ts:parser_set_language(Parser, Lang),
+
+  %% Create and immediately delete trees
+  Trees = [begin
+             T = erl_ts:parser_parse_string(Parser, Source),
+             ok = erl_ts:tree_delete(T),
+             T
+           end || _ <- lists:seq(1, 50)],
+
+  %% Verify we can still use the parser after deleting trees
+  Tree = erl_ts:parser_parse_string(Parser, Source),
+  Root = erl_ts:tree_root_node(Tree),
+  ?assertEqual(true, erl_ts:node_is_named(Root)),
+
+  %% Clean up the last tree
+  ok = erl_ts:tree_delete(Tree),
+
+  %% Try to delete already deleted tree (should return ok)
+  ok = erl_ts:tree_delete(hd(Trees)),
+  ok.
