@@ -33,6 +33,8 @@
         , query_function_test/1
         , tree_gc_frees_memory/1
         , tree_delete_works/1
+        , language_version_test/1
+        , language_min_abi_version_test/1
         ]).
 
 -include_lib("common_test/include/ct.hrl").
@@ -69,6 +71,8 @@ all() ->
   , query_function_test
   , tree_gc_frees_memory
   , tree_delete_works
+  , language_version_test
+  , language_min_abi_version_test
   ].
 
 %% @doc The communication between Erlang and C goes through ERL_NIF_TERMS which
@@ -235,4 +239,34 @@ tree_delete_works(_Config) ->
 
   %% Try to delete already deleted tree (should return ok)
   ok = erl_ts:tree_delete(hd(Trees)),
+  ok.
+
+%% @doc Test language version functions
+language_version_test(_Config) ->
+  {ok, Lang} = erl_ts:tree_sitter_erlang(),
+
+  Version = erl_ts:language_version(Lang),
+  ?assert(is_integer(Version)),
+  ?assertEqual(14, Version),  %% minimum compatible version
+
+  AbiVersion = erl_ts:language_abi_version(Lang),
+  ?assert(is_integer(AbiVersion)),
+  ?assertEqual(14, AbiVersion),  %% minimum compatible version
+
+  ?assertEqual(Version, AbiVersion),
+  ok.
+
+%% @doc Test language min ABI version functions
+language_min_abi_version_test(_Config) ->
+  {ok, Lang} = erl_ts:tree_sitter_erlang(),
+
+  %% Test arity 0 - returns minimum version
+  MinVersion = erl_ts:language_min_abi_version(),
+  ?assert(is_integer(MinVersion)),
+  ?assertEqual(14, MinVersion),
+
+  %% Test arity 1 - returns compatibility tuple
+  {ok, IsCompatible} = erl_ts:language_min_abi_version(Lang),
+  ?assert(is_boolean(IsCompatible)),
+  ?assert(IsCompatible),
   ok.

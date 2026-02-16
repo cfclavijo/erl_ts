@@ -39,8 +39,25 @@ released using ~erl_ts:tree_delete/1~ to free the underlying C memory.
   ok = erl_ts:tree_delete(Tree).
 #+end_example
 
-Alternatively, if you don't call ~tree_delete/1~, the tree will be garbage
-collected by BEAM, and the NIF's destructor will free the C memory automatically.
+Alternatively, if you don't call ~tree_delete/1~, the tree will be garbage collected by BEAM, and the NIF's destructor will free the C memory automatically, however, there is a risk of segfault. The BEAM garbage collector is complex.
+
+** ABI Compatibility
+
+tree-sitter languages have an ABI version that must be compatible with the library. Use the following functions to check compatibility:
+
+- ~erl_ts:language_min_abi_version/0~ - Returns the minimum ABI version this library supports (currently 14)
+- ~erl_ts:language_min_abi_version/1~ - Takes a language resource and returns ~{ok, true}~ if compatible, ~{ok, false}~ otherwise
+
+#+begin_example erlang
+  %% Check minimum supported version
+  MinVersion = erl_ts:language_min_abi_version().
+  %% => 14
+
+  %% Check if a loaded language is compatible
+  {ok, Lang} = erl_ts:tree_sitter_erlang(),
+  {ok, IsCompatible} = erl_ts:language_min_abi_version(Lang).
+  %% => {ok, true}
+#+end_example
 
 ** Develop
 

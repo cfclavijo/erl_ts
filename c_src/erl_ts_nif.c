@@ -480,6 +480,8 @@ ERL_TS_FUNCTION_DECL(language_field_name_for_id_nif)
 ERL_TS_FUNCTION_DECL(language_field_id_for_name_nif)
 ERL_TS_FUNCTION_DECL(language_symbol_type_nif)
 ERL_TS_FUNCTION_DECL(language_version_nif)
+ERL_TS_FUNCTION_DECL(language_abi_version_nif)
+ERL_TS_FUNCTION_DECL(language_min_abi_version_nif)
 ERL_TS_FUNCTION_DECL(language_next_state_nif)
 ERL_TS_FUNCTION_DECL(language_name_nif)
 ERL_TS_FUNCTION_DECL(lookahead_iterator_new_nif)
@@ -2078,6 +2080,28 @@ ERL_TS_FUNCTION(language_version_nif) {
   return enif_make_uint(env, ts_language_version(language));
 }
 
+ERL_TS_FUNCTION(language_abi_version_nif) {
+  void *res_language = NULL;
+  RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSLanguage, &res_language));
+  const TSLanguage *language = ((struct_TSLanguage *)res_language)->val;
+
+  return enif_make_uint(env, ts_language_abi_version(language));
+}
+
+ERL_TS_FUNCTION(language_min_abi_version_nif) {
+  if (argc == 0) {
+    return enif_make_uint(env, ERL_TS_COMP_LANGUAGE_VERSION);
+  } else {
+    void *res_language = NULL;
+    RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSLanguage, &res_language));
+    const TSLanguage *language = ((struct_TSLanguage *)res_language)->val;
+
+    uint32_t lang_abi = ts_language_abi_version(language);
+    bool is_compatible = lang_abi >= ERL_TS_COMP_LANGUAGE_VERSION;
+    return enif_make_tuple2(env, atom_ok, is_compatible ? atom_true : atom_false);
+  }
+}
+
 ERL_TS_FUNCTION(language_next_state_nif) {
   /* TODO: */
   /* TSStateId ts_language_next_state(const TSLanguage *self, TSStateId state, TSSymbol symbol); */
@@ -2291,6 +2315,9 @@ static ErlNifFunc nif_funcs[] = {
   ERL_TS_FUNCTION_ARRAY(language_field_id_for_name,2),
   ERL_TS_FUNCTION_ARRAY(language_symbol_type,2),
   ERL_TS_FUNCTION_ARRAY(language_version,1),
+  ERL_TS_FUNCTION_ARRAY(language_abi_version,1),
+  ERL_TS_FUNCTION_ARRAY(language_min_abi_version,0),
+  ERL_TS_FUNCTION_ARRAY(language_min_abi_version,1),
   ERL_TS_FUNCTION_ARRAY(language_next_state,3),
   ERL_TS_FUNCTION_ARRAY(language_name,1),
   ERL_TS_FUNCTION_ARRAY(lookahead_iterator_new,2),

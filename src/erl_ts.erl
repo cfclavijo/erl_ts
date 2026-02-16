@@ -134,6 +134,9 @@
           language_field_id_for_name/2,
           language_symbol_type/2,
           language_version/1,
+          language_abi_version/1,
+          language_min_abi_version/0,
+          language_min_abi_version/1,
           language_next_state/3,
           language_name/1,
           lookahead_iterator_new/2,
@@ -279,6 +282,9 @@
           language_field_id_for_name/2,
           language_symbol_type/2,
           language_version/1,
+          language_abi_version/1,
+          language_min_abi_version/0,
+          language_min_abi_version/1,
           language_next_state/3,
           language_name/1,
           lookahead_iterator_new/2,
@@ -728,6 +734,18 @@ language_symbol_type(_, _) ->
   erlang:nif_error(nif_library_not_loaded).
 
 language_version(_) ->
+  erlang:nif_error(nif_library_not_loaded).
+
+-spec language_abi_version(TSLang :: term()) -> non_neg_integer().
+language_abi_version(_) ->
+  erlang:nif_error(nif_library_not_loaded).
+
+-spec language_min_abi_version() -> non_neg_integer().
+language_min_abi_version() ->
+  erlang:nif_error(nif_library_not_loaded).
+
+-spec language_min_abi_version(TSLang :: term()) -> {ok, boolean()}.
+language_min_abi_version(_) ->
   erlang:nif_error(nif_library_not_loaded).
 
 language_next_state(_, _, _) ->
