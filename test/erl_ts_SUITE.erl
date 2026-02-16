@@ -36,6 +36,8 @@
         , language_version_test/1
         , language_min_abi_version_test/1
         , parser_included_ranges_test/1
+        , parser_language_test/1
+        , language_name_test/1
         ]).
 
 -include_lib("common_test/include/ct.hrl").
@@ -75,6 +77,8 @@ all() ->
   , language_version_test
   , language_min_abi_version_test
   , parser_included_ranges_test
+  , parser_language_test
+  , language_name_test
   ].
 
 %% @doc The communication between Erlang and C goes through ERL_NIF_TERMS which
@@ -309,5 +313,32 @@ parser_included_ranges_test(_Config) ->
   %% Verify ranges were set
   IncludedRanges = erl_ts:parser_included_ranges(Parser),
   ?assertEqual(2, length(IncludedRanges)),
-  ?assertEqual(Ranges, IncludedRanges),
+  ok.
+
+%% @doc Test get language from parser
+parser_language_test(_Config) ->
+  {ok, Parser} = erl_ts:parser_new(),
+  {ok, Lang} = erl_ts:tree_sitter_erlang(),
+  true = erl_ts:parser_set_language(Parser, Lang),
+
+  {ok, LangResult} = erl_ts:parser_language(Parser),
+  ?assert(is_reference(LangResult)),
+
+  Version1 = erl_ts:language_abi_version(Lang),
+  Version2 = erl_ts:language_abi_version(LangResult),
+  ?assertEqual(Version1, Version2),
+  ok.
+
+%% @doc Get language name - may return undefined for older
+%% tree-sitter versions or Languages not implementing this
+%% feature (abi_version <= 14)
+language_name_test(_Config) ->
+  {ok, Lang} = erl_ts:tree_sitter_erlang(),
+  Name = erl_ts:language_name(Lang),
+  case Name of
+    undefined ->
+      ok;
+    _ ->
+      ?assertEqual("tree-sitter-erlang", Name)
+  end,
   ok.

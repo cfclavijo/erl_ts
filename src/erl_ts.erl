@@ -753,6 +753,7 @@ language_min_abi_version(_) ->
 language_next_state(_, _, _) ->
   erlang:nif_error(nif_library_not_loaded).
 
+-spec language_name(TSLang :: term()) -> string() | undefined | no_return().
 language_name(_) ->
   erlang:nif_error(nif_library_not_loaded).
 

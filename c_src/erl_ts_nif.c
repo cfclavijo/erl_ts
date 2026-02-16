@@ -2136,9 +2136,14 @@ ERL_TS_FUNCTION(language_next_state_nif) {
 }
 
 ERL_TS_FUNCTION(language_name_nif) {
-  /* TODO: TREE_SITTER_LANGUAGE_VERSION > 14 */
-  /* const char *ts_language_name(const TSLanguage *self); */
-  return atom_undefined;
+  void *res_language = NULL;
+  RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSLanguage, &res_language));
+  const TSLanguage *language = ((struct_TSLanguage *)res_language)->val;
+
+  const char *name = ts_language_name(language);
+  if (name == NULL)
+    return atom_undefined;
+  return enif_make_string(env, name, ERL_NIF_UTF8);
 }
 
 /********************************/
