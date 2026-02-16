@@ -33,9 +33,10 @@
         , query_function_test/1
         , tree_gc_frees_memory/1
         , tree_delete_works/1
-        , language_version_test/1
-        , language_min_abi_version_test/1
-        ]).
+         , language_version_test/1
+         , language_min_abi_version_test/1
+         , parser_set_included_ranges_test/1
+         ]).
 
 -include_lib("common_test/include/ct.hrl").
 -include_lib("stdlib/include/assert.hrl").
@@ -73,6 +74,7 @@ all() ->
   , tree_delete_works
   , language_version_test
   , language_min_abi_version_test
+  , parser_set_included_ranges_test
   ].
 
 %% @doc The communication between Erlang and C goes through ERL_NIF_TERMS which
@@ -269,4 +271,33 @@ language_min_abi_version_test(_Config) ->
   {ok, IsCompatible} = erl_ts:language_min_abi_version(Lang),
   ?assert(is_boolean(IsCompatible)),
   ?assert(IsCompatible),
+  ok.
+
+%% @doc Test parser_set_included_ranges/2
+parser_set_included_ranges_test(_Config) ->
+  {ok, Parser} = erl_ts:parser_new(),
+  {ok, Lang} = erl_ts:tree_sitter_erlang(),
+  true = erl_ts:parser_set_language(Parser, Lang),
+
+  %% Test with empty list - returns ok
+  EmptyResult = erl_ts:parser_set_included_ranges(Parser, []),
+  ?assertEqual(ok, EmptyResult),
+
+  %% Test with ranges - returns ok
+  Range1 = #{
+    start_point => #{row => 0, column => 0},
+    end_point => #{row => 0, column => 10},
+    start_byte => 0,
+    end_byte => 10
+  },
+  Range2 = #{
+    start_point => #{row => 2, column => 0},
+    end_point => #{row => 2, column => 10},
+    start_byte => 20,
+    end_byte => 30
+  },
+  Ranges = [Range1, Range2],
+
+  Result = erl_ts:parser_set_included_ranges(Parser, Ranges),
+  ?assertEqual(ok, Result),
   ok.

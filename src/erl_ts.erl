@@ -5,7 +5,7 @@
           parser_delete/1,
           parser_language/1,
           parser_set_language/2,
-          parser_set_included_ranges/3,
+          parser_set_included_ranges/2,
           parser_included_ranges/1,
           parser_parse/3,
           parser_parse_with_options/4,
@@ -154,7 +154,7 @@
           parser_delete/1,
           parser_language/1,
           parser_set_language/2,
-          parser_set_included_ranges/3,
+          parser_set_included_ranges/2,
           parser_included_ranges/1,
           parser_parse/3,
           parser_parse_with_options/4,
@@ -336,7 +336,8 @@ parser_language(_) ->
 parser_set_language(_, _) ->
   erlang:nif_error(nif_library_not_loaded).
 
-parser_set_included_ranges(_, _, _) ->
+-spec parser_set_included_ranges(TSParser :: term(), [map()]) -> ok | {error, term()} | no_return().
+parser_set_included_ranges(_, _) ->
   erlang:nif_error(nif_library_not_loaded).
 
 parser_included_ranges(_) ->

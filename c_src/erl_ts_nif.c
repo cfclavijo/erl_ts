@@ -552,12 +552,43 @@ ERL_TS_FUNCTION(parser_set_language_nif) {
 }
 
 ERL_TS_FUNCTION(parser_set_included_ranges_nif) {
-  /* TODO: */
-  /* bool ts_parser_set_included_ranges( */
-  /* TSParser *self, */
-  /* const TSRange *ranges, */
-  /* uint32_t count */
-  return atom_undefined;
+  void *res_parser = NULL;
+  RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSParser, &res_parser));
+  TSParser *parser = ((struct_TSParser *)res_parser)->val;
+
+  ERL_NIF_TERM list = argv[1];
+  uint32_t count;
+  if (!enif_get_list_length(env, list, &count)) {
+    return enif_make_badarg(env);
+  }
+
+  if (count == 0) {
+    bool result = ts_parser_set_included_ranges(parser, NULL, 0);
+    return result ? atom_ok : mk_error(env, "set_ranges_failed");
+  }
+
+  TSRange *ranges = (TSRange *)enif_alloc(count * sizeof(TSRange));
+  if (!ranges)
+    return mk_error(env, "allocation_failed");
+
+  ERL_NIF_TERM head;
+  uint32_t i = 0;
+  while (i < count && enif_get_list_cell(env, list, &head, &list)) {
+    if (!map_to_tsrange(env, head, &ranges[i])) {
+      enif_free(ranges);
+      return enif_make_badarg(env);
+    }
+    i++;
+  }
+
+  if (i != count) {
+    enif_free(ranges);
+    return mk_error(env, "unexpected_range_count_mismatch");
+  }
+
+  bool result = ts_parser_set_included_ranges(parser, ranges, count);
+  enif_free(ranges);
+  return result ? atom_ok : mk_error(env, "set_ranges_failed");
 }
 
 ERL_TS_FUNCTION(parser_included_ranges_nif) {
@@ -2187,7 +2218,7 @@ static ErlNifFunc nif_funcs[] = {
   ERL_TS_FUNCTION_ARRAY(parser_delete, 1),
   ERL_TS_FUNCTION_ARRAY(parser_language, 1),
   ERL_TS_FUNCTION_ARRAY(parser_set_language, 2),
-  ERL_TS_FUNCTION_ARRAY(parser_set_included_ranges, 3),
+  ERL_TS_FUNCTION_ARRAY(parser_set_included_ranges, 2),
   ERL_TS_FUNCTION_ARRAY(parser_included_ranges, 1),
   ERL_TS_FUNCTION_ARRAY(parser_parse, 3),
   ERL_TS_FUNCTION_ARRAY(parser_parse_with_options, 4),
