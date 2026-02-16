@@ -38,6 +38,7 @@
         , parser_included_ranges_test/1
         , parser_language_test/1
         , language_name_test/1
+        , node_eq_test/1
         ]).
 
 -include_lib("common_test/include/ct.hrl").
@@ -79,6 +80,7 @@ all() ->
   , parser_included_ranges_test
   , parser_language_test
   , language_name_test
+  , node_eq_test
   ].
 
 %% @doc The communication between Erlang and C goes through ERL_NIF_TERMS which
@@ -341,4 +343,26 @@ language_name_test(_Config) ->
     _ ->
       ?assertEqual("tree-sitter-erlang", Name)
   end,
+  ok.
+
+%% @doc Test node_eq
+node_eq_test(_Config) ->
+  {ok, Parser} = erl_ts:parser_new(),
+  {ok, Lang} = erl_ts:tree_sitter_erlang(),
+  true = erl_ts:parser_set_language(Parser, Lang),
+
+  Source = "foo() -> ok.",
+  Tree = erl_ts:parser_parse_string(Parser, Source),
+  Root = erl_ts:tree_root_node(Tree),
+
+  %% Same node compared to itself should be equal
+  ?assert(erl_ts:node_eq(Root, Root)),
+
+  %% Get child node
+  Child = erl_ts:node_child(Root, 0),
+
+  %% Child is different from root
+  ?assertNot(erl_ts:node_eq(Root, Child)),
+
+  ok = erl_ts:tree_delete(Tree),
   ok.

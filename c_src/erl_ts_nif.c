@@ -1446,7 +1446,6 @@ ERL_TS_FUNCTION(node_edit_nif) {
 }
 
 ERL_TS_FUNCTION(node_eq_nif) {
-  /* bool ts_node_eq(TSNode self, TSNode other); */
   void *res_tsnode = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSNode, &res_tsnode));
   TSNode tsnode = ((struct_TSNode *)res_tsnode)->val;
@@ -2087,7 +2086,6 @@ ERL_TS_FUNCTION(language_field_id_for_name_nif) {
 }
 
 ERL_TS_FUNCTION(language_symbol_type_nif) {
-  /* TSSymbolType ts_language_symbol_type(const TSLanguage *self, TSSymbol symbol); */
   void *res_tslanguage = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSLanguage, &res_tslanguage));
   const TSLanguage *tslanguage = ((struct_TSLanguage *)res_tslanguage)->val;

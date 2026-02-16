@@ -539,6 +539,7 @@ node_named_descendant_for_point_range(_, _, _) ->
 node_edit(_, _) ->
   erlang:nif_error(nif_library_not_loaded).
 
+-spec node_eq(TSNode :: term(), TSNode :: term()) -> boolean() | no_return().
 node_eq(_, _) ->
   erlang:nif_error(nif_library_not_loaded).
 
