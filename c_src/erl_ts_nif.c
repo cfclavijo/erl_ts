@@ -592,10 +592,6 @@ ERL_TS_FUNCTION(parser_set_included_ranges_nif) {
 }
 
 ERL_TS_FUNCTION(parser_included_ranges_nif) {
-  /* const TSRange *ts_parser_included_ranges( */
-  /*   const TSParser *self, */
-  /*   uint32_t *count */
-  /* ); */
   void *res_tsparser = NULL;
   RETURN_BADARG_IF(!enif_get_resource(env, argv[0], res_TSParser, &res_tsparser));
   TSParser *tsparser = ((struct_TSParser *)res_tsparser)->val;

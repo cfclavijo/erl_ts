@@ -33,10 +33,10 @@
         , query_function_test/1
         , tree_gc_frees_memory/1
         , tree_delete_works/1
-         , language_version_test/1
-         , language_min_abi_version_test/1
-         , parser_set_included_ranges_test/1
-         ]).
+        , language_version_test/1
+        , language_min_abi_version_test/1
+        , parser_included_ranges_test/1
+        ]).
 
 -include_lib("common_test/include/ct.hrl").
 -include_lib("stdlib/include/assert.hrl").
@@ -74,7 +74,7 @@ all() ->
   , tree_delete_works
   , language_version_test
   , language_min_abi_version_test
-  , parser_set_included_ranges_test
+  , parser_included_ranges_test
   ].
 
 %% @doc The communication between Erlang and C goes through ERL_NIF_TERMS which
@@ -273,8 +273,8 @@ language_min_abi_version_test(_Config) ->
   ?assert(IsCompatible),
   ok.
 
-%% @doc Test parser_set_included_ranges/2
-parser_set_included_ranges_test(_Config) ->
+%% @doc Test parser_included_ranges/1 and parser_set_included_ranges/2
+parser_included_ranges_test(_Config) ->
   {ok, Parser} = erl_ts:parser_new(),
   {ok, Lang} = erl_ts:tree_sitter_erlang(),
   true = erl_ts:parser_set_language(Parser, Lang),
@@ -282,6 +282,11 @@ parser_set_included_ranges_test(_Config) ->
   %% Test with empty list - returns ok
   EmptyResult = erl_ts:parser_set_included_ranges(Parser, []),
   ?assertEqual(ok, EmptyResult),
+
+  %% Verify default ranges (whole document when empty)
+  DefaultRanges = erl_ts:parser_included_ranges(Parser),
+  ?assert(is_list(DefaultRanges)),
+  ?assertEqual(1, length(DefaultRanges)),
 
   %% Test with ranges - returns ok
   Range1 = #{
@@ -298,6 +303,11 @@ parser_set_included_ranges_test(_Config) ->
   },
   Ranges = [Range1, Range2],
 
-  Result = erl_ts:parser_set_included_ranges(Parser, Ranges),
-  ?assertEqual(ok, Result),
+  SetResult = erl_ts:parser_set_included_ranges(Parser, Ranges),
+  ?assertEqual(ok, SetResult),
+
+  %% Verify ranges were set
+  IncludedRanges = erl_ts:parser_included_ranges(Parser),
+  ?assertEqual(2, length(IncludedRanges)),
+  ?assertEqual(Ranges, IncludedRanges),
   ok.

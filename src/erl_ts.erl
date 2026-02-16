@@ -340,6 +340,7 @@ parser_set_language(_, _) ->
 parser_set_included_ranges(_, _) ->
   erlang:nif_error(nif_library_not_loaded).
 
+-spec parser_included_ranges(TSParser :: term()) -> [TSRange :: map()] | no_return().
 parser_included_ranges(_) ->
   erlang:nif_error(nif_library_not_loaded).
 
