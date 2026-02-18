@@ -40,6 +40,10 @@
         , language_name_test/1
         , node_eq_test/1
         , parser_parse_string_test/1
+        , node_type_test/1
+        , node_points_test/1
+        , node_checks/1
+        , node_family_test/1
         ]).
 
 -include_lib("common_test/include/ct.hrl").
@@ -83,6 +87,10 @@ all() ->
   , language_name_test
   , node_eq_test
   , parser_parse_string_test
+  , node_type_test
+  , node_points_test
+  , node_checks
+  , node_family_test
   ].
 
 %% @doc The communication between Erlang and C goes through ERL_NIF_TERMS which
@@ -182,8 +190,8 @@ query_function_test(_Config) ->
   QueryString = "(fun_clause)",
   {Query, _, NoError} = erl_ts:query_new(Lang, QueryString),
   ?assertEqual(error_none, NoError),
-   ?assertEqual(1, erl_ts:query_pattern_count(Query)),
-   ok = erl_ts:tree_delete(Tree).
+  ?assertEqual(1, erl_ts:query_pattern_count(Query)),
+  ok = erl_ts:tree_delete(Tree).
 
 %% @doc Verify that TSTree memory is released when garbage collected.
 %% This test validates that the NIF properly frees the underlying C tree
@@ -386,5 +394,125 @@ parser_parse_string_test(_Config) ->
 
   RootText = erl_ts:node_string(Root),
   ?assert(is_list(RootText)),
+  ok = erl_ts:tree_delete(Tree),
+  ok.
+
+%% @doc Test node_type
+node_type_test(_Config) ->
+  {ok, Parser} = erl_ts:parser_new(),
+  {ok, Lang} = erl_ts:tree_sitter_erlang(),
+  true = erl_ts:parser_set_language(Parser, Lang),
+
+  Source = "fun(A) -> 1 + 2.",
+  Tree = erl_ts:parser_parse_string(Parser, Source),
+
+  Root = erl_ts:tree_root_node(Tree),
+  ?assertNotEqual(undefined, Root),
+
+  RootType = erl_ts:node_type(Root),
+  ?assertEqual("source_file", RootType),
+
+  FunDeclNode = erl_ts:node_child(Root, 0),
+  FunDeclType = erl_ts:node_type(FunDeclNode),
+  ?assertEqual("anonymous_fun", FunDeclType),
+
+  ok = erl_ts:tree_delete(Tree),
+  ok.
+
+%% @doc Test node_start_point_nif and node_end_point_nif
+node_points_test(_Config) ->
+  {ok, Parser} = erl_ts:parser_new(),
+  {ok, Lang} = erl_ts:tree_sitter_erlang(),
+  true = erl_ts:parser_set_language(Parser, Lang),
+
+  Source = "fun(A) -> 1 + 2.",
+  Tree = erl_ts:parser_parse_string(Parser, Source),
+
+  Root = erl_ts:tree_root_node(Tree),
+  ?assertNotEqual(undefined, Root),
+
+  StartPoint = erl_ts:node_start_point(Root),
+  ?assertEqual(#{row => 0, column => 0}, StartPoint),
+
+  EndPoint = erl_ts:node_end_point(Root),
+  ?assertEqual(#{row => 0, column => 16}, EndPoint),
+
+  FunDeclNode = erl_ts:node_child(Root, 0),
+  FunStart = erl_ts:node_start_point(FunDeclNode),
+  ?assertEqual(#{row => 0, column => 0}, FunStart),
+
+  FunEnd = erl_ts:node_end_point(FunDeclNode),
+  ?assertEqual(#{row => 0, column => 15}, FunEnd),
+
+  ok = erl_ts:tree_delete(Tree),
+  ok.
+
+%% @doc Test node check functions
+node_checks(_Config) ->
+  {ok, Parser} = erl_ts:parser_new(),
+  {ok, Lang} = erl_ts:tree_sitter_erlang(),
+  true = erl_ts:parser_set_language(Parser, Lang),
+
+  Source = "fun(A) -> 1+2.",
+  Tree = erl_ts:parser_parse_string(Parser, Source),
+
+  Root = erl_ts:tree_root_node(Tree),
+
+  ?assertNot(erl_ts:node_is_null(Root)),
+  ?assert(erl_ts:node_is_named(Root)),
+  ?assertNot(erl_ts:node_is_missing(Root)),
+  ?assertNot(erl_ts:node_is_extra(Root)),
+  ?assertNot(erl_ts:node_has_changes(Root)),
+  ?assert(erl_ts:node_has_error(Root)),
+
+  FunDeclNode = erl_ts:node_child(Root, 0),
+  ?assertNot(erl_ts:node_is_null(FunDeclNode)),
+  ?assert(erl_ts:node_is_named(FunDeclNode)),
+  ?assertNot(erl_ts:node_is_missing(FunDeclNode)),
+  ?assertNot(erl_ts:node_is_extra(FunDeclNode)),
+
+  ok = erl_ts:tree_delete(Tree),
+  ok.
+
+%% @doc Test node family functions: parent, child, sibling, descendant
+node_family_test(_Config) ->
+  {ok, Parser} = erl_ts:parser_new(),
+  {ok, Lang} = erl_ts:tree_sitter_erlang(),
+  true = erl_ts:parser_set_language(Parser, Lang),
+
+  Source = "foo() -> ok.",
+  Tree = erl_ts:parser_parse_string(Parser, Source),
+  Root = erl_ts:tree_root_node(Tree),
+
+  FunDeclNode = erl_ts:node_child(Root, 0),
+  ?assertNot(erl_ts:node_is_null(FunDeclNode)),
+
+  Parent = erl_ts:node_parent(FunDeclNode),
+  ?assertNot(erl_ts:node_is_null(Parent)),
+  ?assert(erl_ts:node_eq(Parent, Root)),
+
+  ChildCount = erl_ts:node_child_count(FunDeclNode),
+  ?assertEqual(2, ChildCount),
+
+  FirstChild = erl_ts:node_child(FunDeclNode, 0),
+  ?assertNot(erl_ts:node_is_null(FirstChild)),
+
+  NamedChildCount = erl_ts:node_named_child_count(FunDeclNode),
+  ?assertEqual(1, NamedChildCount),
+
+  NamedFirstChild = erl_ts:node_named_child(FunDeclNode, 0),
+  ?assertNot(erl_ts:node_is_null(NamedFirstChild)),
+
+  Descendant = erl_ts:node_descendant_for_point_range(Root,
+                                                      #{row => 0, column => 0},
+                                                      #{row => 0, column => 5}),
+  ?assertNot(erl_ts:node_is_null(Descendant)),
+
+  NamedDescendant =
+    erl_ts:node_named_descendant_for_point_range(Root,
+                                                 #{row => 0, column => 0},
+                                                 #{row => 0, column => 5}),
+  ?assertNot(erl_ts:node_is_null(NamedDescendant)),
+
   ok = erl_ts:tree_delete(Tree),
   ok.
